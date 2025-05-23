@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Calendar User Guide</title>
+  <link rel="icon" href="Elements/myLogo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary-dark: #121212;
+      --bg-secondary-dark: #2A2A2A;
+      --text-primary-dark: #E5E5E5;
+      --text-heading-dark: #FFFFFF;
+      --bg-primary-light: #FFFFFF;
+      --bg-secondary-light: #F5F5F5;
+      --text-primary-light: #333333;
+      --text-heading-light: #000000;
+      --accent-start: #9747FF;
+      --accent-end: #FF47A8;
+      --border-color-dark: #63636356;
+      --border-color-light: #E5E7EB;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+      --transition: 0.3s ease;
+      --font-size-base: 16px;
+      --font-scale: 1;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      line-height: 1.5;
+      background-color: var(--bg-primary-dark);
+      color: var(--text-primary-dark);
+      transition: background-color var(--transition), color var(--transition);
+      min-height: 100vh;
+    }
+    body.light {
+      background-color: var(--bg-primary-light);
+      color: var(--text-primary-light);
+    }
+
+    header {
+      position: relative;
+      margin: 25px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      width: 90%;
+      max-width: 1400px;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: .5rem;
+      border: 1px solid var(--border-color-dark);
+      background-color: rgba(0,0,0,.2);
+      padding: 0.5rem 1rem;
+      box-shadow: var(--shadow);
+      transition: border-color var(--transition), background-color var(--transition);
+    }
+    @supports (backdrop-filter: blur(4px)) {
+      header {
+        backdrop-filter: blur(4px);
+      }
+    }
+    @supports not (backdrop-filter: blur(4px)) {
+      header {
+        background-color: rgba(0,0,0,.4);
+      }
+    }
+    body.light header {
+      border-color: var(--border-color-light);
+      background-color: rgba(255,255,255,.2);
+    }
+    @supports not (backdrop-filter: blur(4px)) {
+      body.light header {
+        background-color: rgba(255,255,255,.4);
+      }
+    }
+
+    .header-title-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    header h1 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.8);
+      color: var(--text-heading-dark);
+      margin: 0;
+    }
+    body.light header h1 {
+      color: var(--text-heading-light);
+    }
+
+    button {
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      border-radius: 9999px;
+      border: 1px solid #363636;
+      background-image: linear-gradient(to bottom, #424242, #212121);
+      padding: 0.25rem 1.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      color: #FFFFFF;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), filter var(--transition);
+      min-width: 44px;
+      min-height: 44px;
+    }
+    body.light button {
+      border-color: #D1D5DB;
+      background-image: linear-gradient(to bottom, #E5E5E5, #D1D5DB);
+      color: #333333;
+    }
+    button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    button::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: #FFFFFF;
+      transition: width 0.3s ease;
+    }
+    body.light button::after {
+      background: #333333;
+    }
+    button:hover::after {
+      width: 80%;
+    }
+
+    #themeToggleBtn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      padding: 0;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      margin-left: 1rem;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    section {
+      margin-bottom: 2rem;
+    }
+    h2 {
+      color: var(--text-heading-dark);
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      transition: color var(--transition);
+    }
+    body.light h2 {
+      color: var(--text-heading-light);
+    }
+    h3 {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      font-weight: 500;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-heading-dark);
+      transition: color var(--transition);
+    }
+    body.light h3 {
+      color: var(--text-heading-light);
+    }
+    p, li {
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      margin-bottom: 0.75rem;
+    }
+    ul {
+      padding-left: 1.5rem;
+      list-style-type: disc;
+    }
+    kbd {
+      background-color: var(--bg-secondary-dark);
+      border: 1px solid var(--border-color-dark);
+      border-radius: 4px;
+      padding: 2px 4px;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      font-family: monospace;
+    }
+    body.light kbd {
+      background-color: var(--bg-secondary-light);
+      border-color: var(--border-color-light);
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color-dark);
+      margin-top: 2rem;
+    }
+    body.light footer {
+      border-color: var(--border-color-light);
+    }
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .social-buttons button {
+      width: 36px;
+      height: 36px;
+      border-radius: 9999px;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .social-buttons button::after {
+      height: 0;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 0.5rem;
+      }
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      }
+      .header-title-container {
+        width: 100%;
+        justify-content: center;
+      }
+      #themeToggleBtn {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+      main {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+      }
+      h2 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.3);
+      }
+      h3 {
+        font-size: calc(var(--font-size-base) * var(--font-scale));
+      }
+      p, li {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+    }
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      }
+      #themeToggleBtn {
+        width: 28px;
+        height: 28px;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      h2 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.1);
+      }
+      h3 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      p, li {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
+      }
+    }
+
+    @media (max-width: 320px) {
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale));
+      }
+      p, li {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="header-title-container">
+    <h1>Daily Calendar User Guide</h1>
+    <button id="themeToggleBtn" aria-label="Toggle Theme">☀️</button>
+  </div>
+  <div>
+    <button onclick="window.location.href='index.html'">Back to Calendar</button>
+  </div>
+</header>
+<main>
+  <section>
+    <h2>Welcome to Daily Calendar</h2>
+    <p>Daily Calendar is a versatile app designed to help you organize your schedule, manage notes, and stay productive. This guide will walk you through its features and how to use them effectively.</p>
+  </section>
+
+  <section>
+    <h2>Getting Started</h2>
+    <h3>Navigating the Calendar</h3>
+    <ul>
+      <li><strong>View the Current Month</strong>: The calendar displays the current month by default.</li>
+      <li><strong>Switch Months</strong>: Use the <strong>◀</strong> and <strong>▶</strong> buttons to navigate to previous or next months.</li>
+      <li><strong>Jump to Today</strong>: Click the <strong>Today</strong> button or press <kbd>Ctrl + T</kbd> to return to the current date.</li>
+      <li><strong>Toggle Views</strong>: Use the <strong>📅</strong> button to switch between monthly, weekly, and daily views.</li>
+    </ul>
+    <h3>Adding a Note</h3>
+    <ul>
+      <li>Click on any day cell to open the note editor.</li>
+      <li>Use the floating <strong>+</strong> button (bottom-right) or press <kbd>Ctrl + N</kbd> to quickly add a note for today.</li>
+    </ul>
+    <h3>Managing Themes</h3>
+    <ul>
+      <li>Toggle between dark and light modes using the <strong>☀️/🌙</strong> button in the header.</li>
+      <li>Access additional themes (e.g., Blue, Green) in the Settings menu (<strong>⚙️</strong> button).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Core Features</h2>
+    <h3>Adding and Editing Notes</h3>
+    <ul>
+      <li><strong>Title and Details</strong>: Enter a title (up to 50 characters) and detailed notes in the editor.</li>
+      <li><strong>Color-Coding</strong>: Assign a color to your note for visual organization.</li>
+      <li><strong>Categories/Tags</strong>: Add a category (e.g., Work, Personal) to classify your notes.</li>
+      <li><strong>Priority Levels</strong>: Set a priority (Low, Medium, High) to highlight importance.</li>
+      <li><strong>Recurring Notes</strong>: Make a note repeat daily, weekly, or monthly.</li>
+      <li><strong>Event Duration</strong>: Specify start and end times to schedule events.</li>
+      <li><strong>Attachments</strong>: Add URLs or text snippets to your notes (stored locally).</li>
+      <li><strong>Pinning Notes</strong>: Pin important notes to the top of a day using the <strong>📌 Pin</strong> button.</li>
+      <li><strong>Undo/Redo</strong>: Use the <strong>↺ Undo</strong> and <strong>↻ Redo</strong> buttons while editing a note.</li>
+      <li><strong>Voice Input</strong>: Click the <strong>🎙️</strong> button to dictate your note title or body.</li>
+      <li><strong>Auto-Save Drafts</strong>: Your note edits are automatically saved as you type.</li>
+    </ul>
+    <h3>Viewing and Managing Notes</h3>
+    <ul>
+      <li><strong>Day Cells</strong>: Notes appear as titles in day cells, color-coded by priority and background.</li>
+      <li><strong>Drag-and-Drop</strong>: Drag a note from one day to another to move it.</li>
+      <li><strong>Sorting Notes</strong>: Notes are sorted with pinned notes at the top; others follow by entry order.</li>
+      <li><strong>Holiday Display</strong>: Public holidays (e.g., New Year, Christmas) are highlighted in gold.</li>
+    </ul>
+    <h3>Searching Notes</h3>
+    <ul>
+      <li>Use the search bar to find notes by title, body, date, or category.</li>
+      <li>Click a search result to jump to that date and edit the note.</li>
+      <li>Clear the search using the <strong>✖</strong> button.</li>
+      <li><strong>Filters</strong>: Search results automatically filter by matching criteria (e.g., date range, tags).</li>
+    </ul>
+    <h3>Bulk Editing</h3>
+    <ul>
+      <li>Hold <kbd>Ctrl</kbd> and click multiple days to select them.</li>
+      <li>Click the <strong>📋 Bulk Edit</strong> button to add a note to all selected days.</li>
+    </ul>
+    <h3>Exporting and Importing</h3>
+    <ul>
+      <li><strong>Export</strong>: Click the <strong>Export</strong> button or press <kbd>Ctrl + E</kbd> to download your notes as a JSON file and events as an iCal file.</li>
+      <li><strong>Import</strong>: Click the <strong>Import</strong> button or press <kbd>Ctrl + I</kbd> to upload a previously exported JSON file.</li>
+    </ul>
+    <h3>Clearing Notes</h3>
+    <ul>
+      <li>Click the <strong>Clear All</strong> button or press <kbd>Ctrl + Shift + C</kbd> to delete all notes (with confirmation).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Advanced Features</h2>
+    <h3>Reminders and Notifications</h3>
+    <ul>
+      <li>Notes with a start time will trigger browser notifications if permission is granted.</li>
+      <li>Notifications include the note title and body as a reminder.</li>
+    </ul>
+    <h3>Note Templates</h3>
+    <ul>
+      <li>Create reusable templates in the note editor (saved locally).</li>
+      <li>Select a template from the dropdown to prefill the note title and body.</li>
+    </ul>
+    <h3>Sharing Notes</h3>
+    <ul>
+      <li>Click the <strong>🔗 Share</strong> button in the note editor to generate a shareable link (copied to clipboard).</li>
+    </ul>
+    <h3>Statistics Dashboard</h3>
+    <ul>
+      <li>Click the <strong>📊</strong> button to view stats like total notes and most active days.</li>
+    </ul>
+    <h3>Weather Integration</h3>
+    <ul>
+      <li>Weather information for the current day is displayed (requires an API setup).</li>
+    </ul>
+    <h3>Customizations</h3>
+    <ul>
+      <li><strong>Font Size</strong>: Adjust the app's font size in the Settings menu (<strong>⚙️</strong>).</li>
+      <li><strong>Custom Themes</strong>: Choose from preset themes (Default, Blue, Green) in Settings.</li>
+      <li><strong>Custom Background</strong>: Set a custom background color or image URL in Settings.</li>
+      <li><strong>Multi-Language Support</strong>: Switch between languages (e.g., English, Spanish) in Settings.</li>
+      <li><strong>High-Contrast Mode</strong>: Enable high-contrast mode for better accessibility in Settings.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Accessibility</h2>
+    <ul>
+      <li><strong>Keyboard Navigation</strong>:
+        <ul>
+          <li><kbd>Ctrl + T</kbd>: Jump to today.</li>
+          <li><kbd>Ctrl + E</kbd>: Export notes.</li>
+          <li><kbd>Ctrl + I</kbd>: Import notes.</li>
+          <li><kbd>Ctrl + Shift + C</kbd>: Clear all notes.</li>
+          <li><kbd>Ctrl + N</kbd>: Quick add note.</li>
+          <li><kbd>Tab</kbd>: Navigate through interactive elements.</li>
+          <li><kbd>Enter</kbd> or <kbd>Space</kbd>: Activate buttons or open day cells.</li>
+        </ul>
+      </li>
+      <li><strong>Screen Reader Support</strong>: All buttons and interactive elements have ARIA labels.</li>
+      <li><strong>High-Contrast Mode</strong>: Enable in Settings for better visibility.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Tips and Tricks</h2>
+    <ul>
+      <li>Use color-coding and priorities to quickly identify important tasks.</li>
+      <li>Pin frequently accessed notes for easy reference.</li>
+      <li>Leverage recurring notes for daily reminders or routines.</li>
+      <li>Drag-and-drop notes to reschedule events effortlessly.</li>
+      <li>Check the statistics dashboard to track your productivity trends.</li>
+    </ul>
+  </section>
+</main>
+<footer>
+  <p>Need help? Contact us!</p>
+  <div class="social-buttons">
+    <button onclick="window.open('https://twitter.com/mirmohmadluqman', '_blank')" aria-label="Twitter"><span>🐦</span></button>
+    <button onclick="window.location.href='mailto:mirmohmmadluqman@gmail.com'" aria-label="Email"><span>✉️</span></button>
+  </div>
+</footer>
+<script>
+(() => {
+  const themeToggleBtn = document.getElementById('themeToggleBtn');
+  let lightTheme = false;
+
+  function init() {
+    loadTheme();
+    bindEvents();
+  }
+
+  function loadTheme() {
+    lightTheme = localStorage.getItem('theme') === 'light';
+    setTheme(lightTheme);
+  }
+
+  function setTheme(light) {
+    lightTheme = light;
+    document.body.classList.toggle('light', lightTheme);
+    themeToggleBtn.textContent = lightTheme ? '🌙' : '☀️';
+    localStorage.setItem('theme', lightTheme ? 'light' : 'dark');
+  }
+
+  function bindEvents() {
+    themeToggleBtn.onclick = () => setTheme(!lightTheme);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
