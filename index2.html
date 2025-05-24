@@ -162,6 +162,12 @@
     }
     section {
       margin-bottom: 2rem;
+      padding: 1rem;
+      border-radius: 8px;
+      background-color: var(--bg-secondary-dark);
+    }
+    body.light section {
+      background-color: var(--bg-secondary-light);
     }
     h2 {
       color: var(--text-heading-dark);
@@ -218,6 +224,7 @@
       justify-content: center;
       gap: 1rem;
       margin-top: 1rem;
+      margin-bottom: 1rem;
     }
     .social-buttons button {
       width: 36px;
@@ -232,8 +239,21 @@
     .social-buttons button::after {
       height: 0;
     }
+    .contact-info {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      margin-top: 1rem;
+    }
+    .contact-info a {
+      color: var(--accent-start);
+      text-decoration: none;
+    }
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+    body.light .contact-info a {
+      color: var(--accent-end);
+    }
 
-    /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
       header {
         flex-direction: column;
@@ -253,6 +273,9 @@
       main {
         margin: 1rem auto;
         padding: 0 0.5rem;
+      }
+      section {
+        padding: 0.75rem;
       }
       h2 {
         font-size: calc(var(--font-size-base) * var(--font-scale) * 1.3);
@@ -308,7 +331,7 @@
 <main>
   <section>
     <h2>Welcome to Daily Calendar</h2>
-    <p>Daily Calendar is a versatile app designed to help you organize your schedule, manage notes, and stay productive. This guide will walk you through its features and how to use them effectively.</p>
+    <p>Daily Calendar is a versatile app designed to help you organize your schedule, manage notes, and boost productivity. This guide will walk you through its features and how to use them effectively.</p>
   </section>
 
   <section>
@@ -322,7 +345,7 @@
     </ul>
     <h3>Adding a Note</h3>
     <ul>
-      <li>Click on any day cell to open the note editor.</li>
+      <li>Click on any day cell to open the note editor for that date.</li>
       <li>Use the floating <strong>+</strong> button (bottom-right) or press <kbd>Ctrl + N</kbd> to quickly add a note for today.</li>
     </ul>
     <h3>Managing Themes</h3>
@@ -337,44 +360,39 @@
     <h3>Adding and Editing Notes</h3>
     <ul>
       <li><strong>Title and Details</strong>: Enter a title (up to 50 characters) and detailed notes in the editor.</li>
-      <li><strong>Color-Coding</strong>: Assign a color to your note for visual organization.</li>
-      <li><strong>Categories/Tags</strong>: Add a category (e.g., Work, Personal) to classify your notes.</li>
+      <li><strong>Color-Coding</strong>: Assign a color to your note for visual organization using the color picker.</li>
+      <li><strong>Categories</strong>: Add a category (e.g., Work, Personal, Other) to classify your notes.</li>
       <li><strong>Priority Levels</strong>: Set a priority (Low, Medium, High) to highlight importance.</li>
-      <li><strong>Recurring Notes</strong>: Make a note repeat daily, weekly, or monthly.</li>
-      <li><strong>Event Duration</strong>: Specify start and end times to schedule events.</li>
-      <li><strong>Attachments</strong>: Add URLs or text snippets to your notes (stored locally).</li>
+      <li><strong>Recurring Notes</strong>: Make a note repeat daily, weekly, or monthly using the recurrence dropdown.</li>
+      <li><strong>Attachments</strong>: Add URLs as attachments to your notes (stored locally).</li>
       <li><strong>Pinning Notes</strong>: Pin important notes to the top of a day using the <strong>📌 Pin</strong> button.</li>
       <li><strong>Undo/Redo</strong>: Use the <strong>↺ Undo</strong> and <strong>↻ Redo</strong> buttons while editing a note.</li>
-      <li><strong>Voice Input</strong>: Click the <strong>🎙️</strong> button to dictate your note title or body.</li>
-      <li><strong>Auto-Save Drafts</strong>: Your note edits are automatically saved as you type.</li>
+      <li><strong>Voice Input</strong>: Click the microphone icon to dictate your note details (requires browser support).</li>
+      <li><strong>Reminders</strong>: Set a reminder in minutes to receive a browser notification before the event.</li>
     </ul>
     <h3>Viewing and Managing Notes</h3>
     <ul>
-      <li><strong>Day Cells</strong>: Notes appear as titles in day cells, color-coded by priority and background.</li>
-      <li><strong>Drag-and-Drop</strong>: Drag a note from one day to another to move it.</li>
-      <li><strong>Sorting Notes</strong>: Notes are sorted with pinned notes at the top; others follow by entry order.</li>
+      <li><strong>Day Cells</strong>: Notes appear as titles in day cells, with background colors reflecting their assigned color.</li>
+      <li><strong>Sorting Notes</strong>: Pinned notes appear at the top; others are sorted by creation order.</li>
       <li><strong>Holiday Display</strong>: Public holidays (e.g., New Year, Christmas) are highlighted in gold.</li>
     </ul>
     <h3>Searching Notes</h3>
     <ul>
-      <li>Use the search bar to find notes by title, body, date, or category.</li>
+      <li>Use the search bar at the top to find notes by title, body, date, or category.</li>
       <li>Click a search result to jump to that date and edit the note.</li>
-      <li>Clear the search using the <strong>✖</strong> button.</li>
-      <li><strong>Filters</strong>: Search results automatically filter by matching criteria (e.g., date range, tags).</li>
     </ul>
-    <h3>Bulk Editing</h3>
+    <h3>Exporting and Importing Data</h3>
     <ul>
-      <li>Hold <kbd>Ctrl</kbd> and click multiple days to select them.</li>
-      <li>Click the <strong>📋 Bulk Edit</strong> button to add a note to all selected days.</li>
+      <li><strong>Export</strong>: In Settings, click <strong>Export Data</strong> to download your notes and focus data as a JSON file.</li>
+      <li><strong>Import</strong>: In Settings, use the <strong>Import Data</strong> option to upload a previously exported JSON file.</li>
     </ul>
-    <h3>Exporting and Importing</h3>
+    <h3>Pomodoro Timer</h3>
     <ul>
-      <li><strong>Export</strong>: Click the <strong>Export</strong> button or press <kbd>Ctrl + E</kbd> to download your notes as a JSON file and events as an iCal file.</li>
-      <li><strong>Import</strong>: Click the <strong>Import</strong> button or press <kbd>Ctrl + I</kbd> to upload a previously exported JSON file.</li>
-    </ul>
-    <h3>Clearing Notes</h3>
-    <ul>
-      <li>Click the <strong>Clear All</strong> button or press <kbd>Ctrl + Shift + C</kbd> to delete all notes (with confirmation).</li>
+      <li>Click the <strong>⏰</strong> button to open the Pomodoro Timer.</li>
+      <li>Choose between Pomodoro, Short Break, or Long Break modes.</li>
+      <li>Customize durations in Settings (default: 25 min Pomodoro, 5 min Short Break, 15 min Long Break).</li>
+      <li>Start, pause, resume, or stop the timer using the respective buttons.</li>
+      <li>An alarm plays when the timer finishes (requires an audio file at <code>Elements/alarm.mp3</code>).</li>
     </ul>
   </section>
 
@@ -382,32 +400,22 @@
     <h2>Advanced Features</h2>
     <h3>Reminders and Notifications</h3>
     <ul>
-      <li>Notes with a start time will trigger browser notifications if permission is granted.</li>
-      <li>Notifications include the note title and body as a reminder.</li>
-    </ul>
-    <h3>Note Templates</h3>
-    <ul>
-      <li>Create reusable templates in the note editor (saved locally).</li>
-      <li>Select a template from the dropdown to prefill the note title and body.</li>
+      <li>Notes with reminders trigger browser notifications if permission is granted.</li>
+      <li>Customize reminder intervals in Settings to get periodic focus reminders during Pomodoro sessions.</li>
     </ul>
     <h3>Sharing Notes</h3>
     <ul>
-      <li>Click the <strong>🔗 Share</strong> button in the note editor to generate a shareable link (copied to clipboard).</li>
+      <li>Click the <strong>🔗 Share</strong> button in the note editor to copy the note details to your clipboard.</li>
     </ul>
     <h3>Statistics Dashboard</h3>
     <ul>
-      <li>Click the <strong>📊</strong> button to view stats like total notes and most active days.</li>
-    </ul>
-    <h3>Weather Integration</h3>
-    <ul>
-      <li>Weather information for the current day is displayed (requires an API setup).</li>
+      <li>Click the <strong>📊</strong> button to view stats like total notes, active days, and focus time (daily, weekly, monthly).</li>
     </ul>
     <h3>Customizations</h3>
     <ul>
-      <li><strong>Font Size</strong>: Adjust the app's font size in the Settings menu (<strong>⚙️</strong>).</li>
+      <li><strong>Font Size</strong>: Adjust the app's font size in Settings using the slider (0.8x to 1.2x).</li>
       <li><strong>Custom Themes</strong>: Choose from preset themes (Default, Blue, Green) in Settings.</li>
-      <li><strong>Custom Background</strong>: Set a custom background color or image URL in Settings.</li>
-      <li><strong>Multi-Language Support</strong>: Switch between languages (e.g., English, Spanish) in Settings.</li>
+      <li><strong>Multi-Language Support</strong>: Switch between languages (English, Spanish) in Settings.</li>
       <li><strong>High-Contrast Mode</strong>: Enable high-contrast mode for better accessibility in Settings.</li>
     </ul>
   </section>
@@ -418,9 +426,6 @@
       <li><strong>Keyboard Navigation</strong>:
         <ul>
           <li><kbd>Ctrl + T</kbd>: Jump to today.</li>
-          <li><kbd>Ctrl + E</kbd>: Export notes.</li>
-          <li><kbd>Ctrl + I</kbd>: Import notes.</li>
-          <li><kbd>Ctrl + Shift + C</kbd>: Clear all notes.</li>
           <li><kbd>Ctrl + N</kbd>: Quick add note.</li>
           <li><kbd>Tab</kbd>: Navigate through interactive elements.</li>
           <li><kbd>Enter</kbd> or <kbd>Space</kbd>: Activate buttons or open day cells.</li>
@@ -437,8 +442,18 @@
       <li>Use color-coding and priorities to quickly identify important tasks.</li>
       <li>Pin frequently accessed notes for easy reference.</li>
       <li>Leverage recurring notes for daily reminders or routines.</li>
-      <li>Drag-and-drop notes to reschedule events effortlessly.</li>
       <li>Check the statistics dashboard to track your productivity trends.</li>
+      <li>Use the Pomodoro Timer to maintain focus during work sessions.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li><strong>Notifications Not Working</strong>: Ensure notification permissions are granted in your browser settings.</li>
+      <li><strong>Timer Alarm Not Playing</strong>: Verify that <code>Elements/alarm.mp3</code> exists in your project directory.</li>
+      <li><strong>Import Fails</strong>: Ensure the JSON file is valid and matches the app's data structure.</li>
+      <li><strong>Voice Input Not Working</strong>: Check if your browser supports speech recognition and your microphone is enabled.</li>
     </ul>
   </section>
 </main>
@@ -447,6 +462,10 @@
   <div class="social-buttons">
     <button onclick="window.open('https://twitter.com/mirmohmadluqman', '_blank')" aria-label="Twitter"><span>🐦</span></button>
     <button onclick="window.location.href='mailto:mirmohmmadluqman@gmail.com'" aria-label="Email"><span>✉️</span></button>
+  </div>
+  <div class="contact-info">
+    <p>Twitter ID: <a href="https://twitter.com/mirmohmadluqman" target="_blank">@mirmohmadluqman</a></p>
+    <p>Gmail: <a href="mailto:mirmohmmadluqman@gmail.com">mirmohmmadluqman@gmail.com</a></p>
   </div>
 </footer>
 <script>
