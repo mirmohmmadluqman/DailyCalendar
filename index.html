@@ -305,7 +305,7 @@
       opacity: 0;
       pointer-events: none;
       transition: transform var(--transition), opacity var(--transition);
-      padding: 1rem;
+      padding: 1.5rem;
       display: flex;
       flex-direction: column;
       z-index: 1000;
@@ -340,7 +340,7 @@
       font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
       font-weight: 700;
       color: var(--text-heading-dark);
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
       transition: color var(--transition);
     }
     body.light #noteEditor h2, body.light #searchPopup h2, body.light #statsPopup h2, body.light #settingsPopup h2, body.light #timerPopup h2 {
@@ -349,20 +349,22 @@
 
     #noteEditor label, #settingsPopup label {
       font-size: calc(var(--font-size-base) * var(--font-scale));
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
       display: block;
+      font-weight: 500;
     }
 
     #noteEditor input, #noteEditor textarea, #noteEditor select, #settingsPopup input, #settingsPopup select {
       width: 100%;
       padding: 0.5rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       font-size: calc(var(--font-size-base) * var(--font-scale));
       border-radius: 8px;
       border: 1px solid var(--border-color-dark);
       background-color: var(--bg-primary-dark);
       color: var(--text-primary-dark);
       transition: border-color var(--transition), background-color var(--transition), color var(--transition);
+      box-sizing: border-box;
     }
     body.light #noteEditor input, body.light #noteEditor textarea, body.light #noteEditor select, body.light #settingsPopup input, body.light #settingsPopup select {
       border-color: var(--border-color-light);
@@ -498,6 +500,38 @@
       margin-bottom: 1rem;
     }
 
+    .settings-section {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color-dark);
+    }
+    body.light .settings-section {
+      border-bottom-color: var(--border-color-light);
+    }
+
+    .settings-section:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .settings-buttons {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .file-info {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      color: var(--text-primary-dark);
+      margin-top: 0.5rem;
+      word-break: break-all;
+    }
+    body.light .file-info {
+      color: var(--text-primary-light);
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
       header {
@@ -546,7 +580,7 @@
       }
       #noteEditor, #searchPopup, #statsPopup, #settingsPopup, #timerPopup {
         width: 95%;
-        padding: 0.75rem;
+        padding: 1rem;
       }
     }
 
@@ -703,34 +737,45 @@
 
 <div id="settingsPopup" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <h2 id="settingsTitle">Settings</h2>
-  <label for="fontSize">Font Size:</label>
-  <input type="range" id="fontSize" min="0.8" max="1.2" step="0.1" value="1" />
-  <label for="themeSelect">Theme:</label>
-  <select id="themeSelect">
-    <option value="default">Default</option>
-    <option value="blue">Blue</option>
-    <option value="green">Green</option>
-  </select>
-  <label for="languageSelect">Language:</label>
-  <select id="languageSelect">
-    <option value="en">English</option>
-    <option value="es">Spanish</option>
-  </select>
-  <label for="highContrast">High-Contrast Mode:</label>
-  <input type="checkbox" id="highContrast" />
-  <label for="reminderInterval">Reminder Interval (minutes):</label>
-  <input type="number" id="reminderInterval" min="0" value="0" placeholder="Set to 0 to disable" />
-  <label for="pomodoroDuration">Pomodoro Duration (minutes):</label>
-  <input type="number" id="pomodoroDuration" min="1" value="25" />
-  <label for="shortBreakDuration">Short Break Duration (minutes):</label>
-  <input type="number" id="shortBreakDuration" min="1" value="5" />
-  <label for="longBreakDuration">Long Break Duration (minutes):</label>
-  <input type="number" id="longBreakDuration" min="1" value="15" />
-  <label for="importData">Import Data:</label>
-  <input type="file" id="importData" accept=".json" />
-  <button id="exportDataBtn">Export Data</button>
-  <button id="saveSettingsBtn">Save</button>
-  <button id="closeSettingsBtn">Close</button>
+  <div class="settings-section">
+    <label for="fontSize">Font Size:</label>
+    <input type="range" id="fontSize" min="0.8" max="1.2" step="0.1" value="1" />
+  </div>
+  <div class="settings-section">
+    <label for="themeSelect">Theme:</label>
+    <select id="themeSelect">
+      <option value="default">Default</option>
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+    </select>
+    <label for="languageSelect">Language:</label>
+    <select id="languageSelect">
+      <option value="en">English</option>
+      <option value="es">Spanish</option>
+    </select>
+    <label for="highContrast">High-Contrast Mode:</label>
+    <input type="checkbox" id="highContrast" />
+  </div>
+  <div class="settings-section">
+    <label for="reminderInterval">Reminder Interval (minutes):</label>
+    <input type="number" id="reminderInterval" min="0" value="0" placeholder="Set to 0 to disable" />
+    <label for="pomodoroDuration">Pomodoro Duration (minutes):</label>
+    <input type="number" id="pomodoroDuration" min="1" value="25" />
+    <label for="shortBreakDuration">Short Break Duration (minutes):</label>
+    <input type="number" id="shortBreakDuration" min="1" value="5" />
+    <label for="longBreakDuration">Long Break Duration (minutes):</label>
+    <input type="number" id="longBreakDuration" min="1" value="15" />
+  </div>
+  <div class="settings-section">
+    <label for="importData">Import Data:</label>
+    <input type="file" id="importData" accept=".json" />
+    <div class="file-info" id="fileInfo">No file chosen</div>
+    <button id="exportDataBtn">Export Data</button>
+  </div>
+  <div class="settings-buttons">
+    <button id="saveSettingsBtn">Save</button>
+    <button id="closeSettingsBtn">Close</button>
+  </div>
 </div>
 
 <div id="timerPopup" role="dialog" aria-modal="true" aria-labelledby="timerTitle">
@@ -791,6 +836,7 @@
   const shortBreakDurationInput = document.getElementById('shortBreakDuration');
   const longBreakDurationInput = document.getElementById('longBreakDuration');
   const importDataInput = document.getElementById('importData');
+  const fileInfo = document.getElementById('fileInfo');
   const exportDataBtn = document.getElementById('exportDataBtn');
   const saveSettingsBtn = document.getElementById('saveSettingsBtn');
   const closeSettingsBtn = document.getElementById('closeSettingsBtn');
@@ -1370,6 +1416,7 @@
   function openSettingsPopup() {
     settingsPopup.classList.add('open');
     overlay.classList.add('open');
+    fileInfo.textContent = 'No file chosen';
   }
 
   function closeSettingsPopup() {
@@ -1405,7 +1452,11 @@
 
   function importData(event) {
     const file = event.target.files[0];
-    if (!file) return;
+    if (!file) {
+      fileInfo.textContent = 'No file chosen';
+      return;
+    }
+    fileInfo.textContent = `Chosen file: ${file.name}`;
     const reader = new FileReader();
     reader.onload = (e) => {
       try {
@@ -1449,6 +1500,7 @@
         }
       } catch (err) {
         alert('Failed to import data. Please ensure the file is a valid JSON.');
+        fileInfo.textContent = 'Failed to import. Invalid file.';
       }
     };
     reader.readAsText(file);
