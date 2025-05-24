@@ -1,1412 +1,1285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Daily Calendar</title>
-<link rel="icon" href="Elements/myLogo.png" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg-primary-dark: #121212;
-    --bg-secondary-dark: #2A2A2A;
-    --text-primary-dark: #E5E5E5;
-    --text-heading-dark: #FFFFFF;
-    --bg-primary-light: #FFFFFF;
-    --bg-secondary-light: #F5F5F5;
-    --text-primary-light: #333333;
-    --text-heading-light: #000000;
-    --accent-start: #9747FF;
-    --accent-end: #FF47A8;
-    --border-color-dark: #63636356;
-    --border-color-light: #E5E7EB;
-    --shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
-    --transition: 0.3s ease;
-    --font-size-base: 16px;
-    --font-scale: 1;
-    --theme-bg: var(--bg-primary-dark);
-    --theme-text: var(--text-primary-dark);
-    --theme-heading: var(--text-heading-dark);
-    --theme-secondary: var(--bg-secondary-dark);
-    --theme-border: var(--border-color-dark);
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    line-height: 1.5;
-    background-color: var(--theme-bg);
-    color: var(--theme-text);
-    transition: background-color var(--transition), color var(--transition);
-    min-height: 100vh;
-  }
-  body.light {
-    --theme-bg: var(--bg-primary-light);
-    --theme-text: var(--text-primary-light);
-    --theme-heading: var(--text-heading-light);
-    --theme-secondary: var(--bg-secondary-light);
-    --theme-border: var(--border-color-light);
-  }
-  body.high-contrast {
-    --theme-bg: #000000;
-    --theme-text: #FFFFFF;
-    --theme-heading: #FFFFFF;
-    --theme-secondary: #333333;
-    --theme-border: #FFFFFF;
-  }
-  body.theme-blue {
-    --accent-start: #1E90FF;
-    --accent-end: #00BFFF;
-  }
-  body.theme-green {
-    --accent-start: #32CD32;
-    --accent-end: #98FB98;
-  }
-
-  header {
-    position: relative;
-    margin: 25px auto 0;
-    display: flex;
-    flex-wrap: wrap;
-    width: 90%;
-    max-width: 1400px;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: .5rem;
-    border: 1px solid var(--theme-border);
-    background-color: rgba(0,0,0,.2);
-    padding: 0.5rem 1rem;
-    box-shadow: var(--shadow);
-    transition: border-color var(--transition), background-color var(--transition);
-  }
-  @supports (backdrop-filter: blur(4px)) {
-    header {
-      backdrop-filter: blur(4px);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1 Daily Calendar</title>
+  <link rel="icon" href="Elements/myLogo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary-dark: #121212;
+      --bg-secondary-dark: #2A2A2A;
+      --text-primary-dark: #E5E5E5;
+      --text-heading-dark: #FFFFFF;
+      --bg-primary-light: #FFFFFF;
+      --bg-secondary-light: #F5F5F5;
+      --text-primary-light: #333333;
+      --text-heading-light: #000000;
+      --accent-start: #9747FF;
+      --accent-end: #FF47A8;
+      --border-color-dark: #63636356;
+      --border-color-light: #E5E7EB;
+      --shadow: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+      --transition: 0.3s ease;
+      --font-size-base: 16px;
+      --font-scale: 1;
     }
-  }
-  @supports not (backdrop-filter: blur(4px)) {
-    header {
-      background-color: rgba(0,0,0,.4);
-    }
-  }
-  body.light header {
-    background-color: rgba(255,255,255,.2);
-  }
-  @supports not (backdrop-filter: blur(4px)) {
-    body.light header {
-      background-color: rgba(255,255,255,.4);
-    }
-  }
 
-  .header-title-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  header h1 {
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 1.8rem;
-    color: var(--theme-heading);
-    margin: 0;
-  }
-
-  .button-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    width: 100%;
-  }
-  button {
-    cursor: pointer;
-    position: relative;
-    white-space: nowrap;
-    border-radius: 9999px;
-    border: 1px solid #363636;
-    background-image: linear-gradient(to bottom, #424242, #212121);
-    padding: 0.25rem 1.75rem;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    color: #FFFFFF;
-    box-shadow: var(--shadow);
-    transition: transform var(--transition), filter var(--transition);
-    min-width: 44px;
-    min-height: 44px;
-  }
-  body.light button {
-    border-color: #D1D5DB;
-    background-image: linear-gradient(to bottom, #E5E5E5, #D1D5DB);
-    color: #333333;
-  }
-  button:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
-  button:active {
-    transform: scale(0.95);
-  }
-  button::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: #FFFFFF;
-    transition: width 0.3s ease;
-  }
-  body.light button::after {
-    background: #333333;
-  }
-  button:hover::after {
-    width: 80%;
-  }
-  button.no-underline::after {
-    content: none;
-  }
-  #prevMonthBtn, #nextMonthBtn {
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
-  }
-
-  #themeToggleBtn, #settingsBtn, #statsBtn {
-    width: 32px;
-    height: 32px;
-    border-radius: 9999px;
-    padding: 0;
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-  }
-  #themeToggleBtn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-  #settingsBtn { position: absolute; right: 40px; top: 50%; transform: translateY(-50%); }
-  #statsBtn { position: absolute; right: 80px; top: 50%; transform: translateY(-50%); }
-
-  .search-container {
-    position: relative;
-    max-width: 300px;
-    width: 100%;
-    margin: 0.5rem auto;
-  }
-  #searchBar {
-    width: 100%;
-    max-width: 300px;
-    padding: 0.5rem 2.5rem 0.5rem 1rem;
-    border-radius: 12px;
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    background-color: rgba(0,0,0,.2);
-    color: var(--theme-text);
-    border: 1px solid transparent;
-    border-image: linear-gradient(90deg, var(--accent-start) 0%, var(--accent-end) 100%) 1;
-    box-shadow: var(--shadow);
-    transition: border-image var(--transition), background-color var(--transition), color var(--transition), transform var(--transition);
-  }
-  @supports (backdrop-filter: blur(4px)) {
-    #searchBar {
-      backdrop-filter: blur(4px);
-    }
-  }
-  @supports not (backdrop-filter: blur(4px)) {
-    #searchBar {
-      background-color: rgba(0,0,0,.4);
-    }
-  }
-  body.light #searchBar {
-    background-color: rgba(255,255,255,.2);
-  }
-  @supports not (backdrop-filter: blur(4px)) {
-    body.light #searchBar {
-      background-color: rgba(255,255,255,.4);
-    }
-  }
-  #searchBar:focus {
-    outline: none;
-    transform: scale(1.02);
-    border-image: linear-gradient(90deg, var(--accent-end) 0%, var(--accent-start) 100%) 1;
-    box-shadow: 0 0 8px rgba(151, 71, 255, 0.3);
-  }
-  #searchBar::placeholder {
-    color: var(--theme-text);
-    opacity: 0.6;
-  }
-  #clearSearch {
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--theme-text);
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    cursor: pointer;
-    display: none;
-  }
-  #searchBar:not(:placeholder-shown) + #clearSearch {
-    display: block;
-  }
-
-  #calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 10px;
-    padding: 1rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-  }
-  #calendar.weekly {
-    grid-template-columns: repeat(7, 1fr);
-  }
-  #calendar.daily {
-    grid-template-columns: 1fr;
-  }
-  #calendar > div {
-    scroll-snap-align: start;
-    min-width: 100px;
-  }
-
-  .day-cell {
-    background: var(--theme-secondary);
-    border-radius: 10px;
-    min-height: 90px;
-    padding: 8px 10px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    transition: background-color var(--transition);
-    user-select: none;
-    border: 1px solid var(--theme-border);
-  }
-  .day-cell:hover {
-    background: #3A3A3A;
-  }
-  body.light .day-cell:hover {
-    background: #E5E5E5;
-  }
-  .today {
-    border: 2px solid var(--accent-start);
-  }
-  .day-cell.dragging {
-    opacity: 0.5;
-  }
-  .day-cell.drop-target {
-    border: 2px dashed var(--accent-start);
-  }
-  .day-cell.holiday {
-    background: rgba(255, 215, 0, 0.2);
-  }
-
-  .day-number {
-    font-weight: 500;
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    color: var(--theme-heading);
-  }
-
-  .note-title {
-    margin-top: 6px;
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    font-weight: 400;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--theme-text);
-  }
-  .note-title.pinned {
-    font-weight: 600;
-    border-left: 3px solid var(--accent-start);
-    padding-left: 5px;
-  }
-  .note-title.priority-high { color: #FF4444; }
-  .note-title.priority-medium { color: #FFBB33; }
-  .note-title.priority-low { color: #33FF33; }
-
-  #notePopup, #settingsPopup, #statsPopup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 90%;
-    max-width: 400px;
-    max-height: 80vh;
-    background-color: var(--theme-secondary);
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform var(--transition), opacity var(--transition);
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-    border: 1px solid var(--theme-border);
-    overflow-y: auto;
-  }
-  #notePopup.open, #settingsPopup.open, #statsPopup.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  #notePopup label, #settingsPopup label, #statsPopup label {
-    font-weight: 500;
-    margin-top: 0.75rem;
-    color: var(--theme-heading);
-  }
-  #notePopup input, #settingsPopup input, #statsPopup input,
-  #notePopup textarea, #settingsPopup textarea, #statsPopup textarea,
-  #notePopup select, #settingsPopup select, #statsPopup select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
-    font-size: calc(var(--font-size-base) * var(--font-scale));
-    border-radius: 8px;
-    border: 1px solid var(--theme-border);
-    background-color: #3A3A3A;
-    color: var(--theme-text);
-    transition: border-color var(--transition), background-color var(--transition);
-  }
-  body.light #notePopup input, body.light #settingsPopup input, body.light #statsPopup input,
-  body.light #notePopup textarea, body.light #settingsPopup textarea, body.light #statsPopup textarea,
-  body.light #notePopup select, body.light #settingsPopup select, body.light #statsPopup select {
-    background-color: #E5E5E5;
-  }
-  #notePopup textarea, #settingsPopup textarea, #statsPopup textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-  #notePopup input:focus, #settingsPopup input:focus, #statsPopup input:focus,
-  #notePopup textarea:focus, #settingsPopup textarea:focus, #statsPopup textarea:focus,
-  #notePopup select:focus, #settingsPopup select:focus, #statsPopup select:focus {
-    outline: none;
-    border-color: var(--accent-start);
-  }
-
-  #overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition);
-    z-index: 900;
-  }
-  body.light #overlay {
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-  #overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  #searchResults {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    background: var(--theme-secondary);
-    box-shadow: var(--shadow);
-    max-height: 220px;
-    width: 100%;
-    max-width: 300px;
-    overflow-y: auto;
-    border-radius: 10px;
-    z-index: 1100;
-    border: 1px solid var(--theme-border);
-    transition: background-color var(--transition);
-  }
-  #searchResults div {
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    border-bottom: 1px solid var(--theme-border);
-    transition: background-color var(--transition);
-  }
-  #searchResults div:last-child {
-    border-bottom: none;
-  }
-  #searchResults div:hover {
-    background-color: #3A3A3A;
-  }
-  body.light #searchResults div:hover {
-    background-color: #E5E5E5;
-  }
-  #searchResults mark {
-    background: rgba(151, 71, 255, 0.3);
-    padding: 0 2px;
-    border-radius: 2px;
-  }
-
-  #noteCounter {
-    text-align: center;
-    padding: 0.75rem;
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    color: var(--theme-text);
-  }
-
-  #quickAddBtn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-image: linear-gradient(90deg, var(--accent-start), var(--accent-end));
-    color: #FFFFFF;
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-    z-index: 1000;
-  }
-
-  footer {
-    text-align: center;
-    padding: 1.5rem;
-    border-top: 1px solid var(--theme-border);
-    margin-top: 1.5rem;
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-  }
-  .social-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-  }
-  .social-buttons button {
-    width: 36px;
-    height: 36px;
-    border-radius: 9999px;
-    font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-  }
-  .social-buttons button::after {
-    height: 0;
-  }
-
-  /* Media Queries for Responsiveness */
-  @media (min-width: 1400px) {
-    header { max-width: 1600px; }
-    #calendar { grid-template-columns: repeat(7, minmax(150px, 1fr)); }
-    .day-cell { min-height: 120px; }
-  }
-
-  @media (max-width: 768px) {
-    header {
-      flex-direction: column;
-      padding: 0.5rem;
-    }
-    header h1 {
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
-    }
-    .header-title-container {
-      width: 100%;
-      justify-content: center;
-    }
-    #themeToggleBtn { right: 1rem; }
-    #settingsBtn { right: 3rem; }
-    #statsBtn { right: 5rem; }
-    .button-group {
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 0.3rem;
-    }
-    button {
-      padding: 0.2rem 1rem;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    }
-    #prevMonthBtn, #nextMonthBtn {
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
       font-size: calc(var(--font-size-base) * var(--font-scale));
+      line-height: 1.5;
+      background-color: var(--bg-primary-dark);
+      color: var(--text-primary-dark);
+      transition: background-color var(--transition), color var(--transition);
+      min-height: 100vh;
     }
-    #calendar {
-      grid-template-columns: repeat(7, minmax(80px, 1fr));
-      padding: 0.5rem;
+    body.light {
+      background-color: var(--bg-primary-light);
+      color: var(--text-primary-light);
     }
-    .day-cell {
-      min-height: 70px;
-      padding: 6px 8px;
-    }
-    .day-number {
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    }
-    .note-title {
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
-    }
-    #notePopup, #settingsPopup, #statsPopup {
-      padding: 0.75rem;
-    }
-    #searchResults {
-      max-height: 180px;
-    }
-    #searchBar {
-      max-width: 100%;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-      padding: 0.4rem 2rem 0.4rem 0.8rem;
-    }
-    #clearSearch {
-      right: 0.5rem;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
-    }
-  }
 
-  @media (max-width: 480px) {
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary-dark);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-start);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-end);
+    }
+    body.light ::-webkit-scrollbar-track {
+      background: var(--bg-secondary-light);
+    }
+    body.light ::-webkit-scrollbar-thumb {
+      background: var(--accent-start);
+    }
+    body.light ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-end);
+    }
+
+    header {
+      position: relative;
+      margin: 25px auto 0;
+      display: flex;
+      flex-wrap: wrap;
+      width: 90%;
+      max-width: 1400px;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: .5rem;
+      border: 1px solid var(--border-color-dark);
+      background-color: rgba(0,0,0,.2);
+      padding: 0.5rem 1rem;
+      box-shadow: var(--shadow);
+      transition: border-color var(--transition), background-color var(--transition);
+    }
+    @supports (backdrop-filter: blur(4px)) {
+      header {
+        backdrop-filter: blur(4px);
+      }
+    }
+    @supports not (backdrop-filter: blur(4px)) {
+      header {
+        background-color: rgba(0,0,0,.4);
+      }
+    }
+    body.light header {
+      border-color: var(--border-color-light);
+      background-color: rgba(255,255,255,.2);
+    }
+    @supports not (backdrop-filter: blur(4px)) {
+      body.light header {
+        background-color: rgba(255,255,255,.4);
+      }
+    }
+
+    .header-title-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
     header h1 {
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.8);
+      color: var(--text-heading-dark);
+      margin: 0;
     }
-    #themeToggleBtn, #settingsBtn, #statsBtn {
-      width: 28px;
-      height: 28px;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+    body.light header h1 {
+      color: var(--text-heading-light);
     }
-    #themeToggleBtn { right: 0.5rem; }
-    #settingsBtn { right: 2.5rem; }
-    #statsBtn { right: 4.5rem; }
-    .button-group {
-      flex-direction: column;
+
+    button {
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      border-radius: 9999px;
+      border: 1px solid #363636;
+      background-image: linear-gradient(to bottom, #424242, #212121);
+      padding: 0.25rem 1.75rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      color: #FFFFFF;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), filter var(--transition);
+      min-width: 44px;
+      min-height: 44px;
+    }
+    body.light button {
+      border-color: #D1D5DB;
+      background-image: linear-gradient(to bottom, #E5E5E5, #D1D5DB);
+      color: #333333;
+    }
+    button:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    button::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: #FFFFFF;
+      transition: width 0.3s ease;
+    }
+    body.light button::after {
+      background: #333333;
+    }
+    button:hover::after {
+      width: 80%;
+    }
+
+    #themeToggleBtn, #settingsBtn, #statsBtn, #timerBtn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      padding: 0;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      margin-left: 1rem;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .calendar-header {
+      margin: 2rem auto;
+      width: 90%;
+      max-width: 1400px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .calendar-header h2 {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      font-weight: 700;
+      color: var(--text-heading-dark);
+      transition: color var(--transition);
+    }
+    body.light .calendar-header h2 {
+      color: var(--text-heading-light);
+    }
+
+    .calendar-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .calendar-grid {
+      width: 90%;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
       gap: 0.5rem;
     }
-    button {
-      padding: 0.2rem 0.75rem;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
+
+    .calendar-grid div {
+      aspect-ratio: 1;
+      border: 1px solid var(--border-color-dark);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      background-color: var(--bg-secondary-dark);
+      position: relative;
+      overflow: hidden;
+      transition: background-color var(--transition), border-color var(--transition);
     }
-    #prevMonthBtn, #nextMonthBtn {
+    body.light .calendar-grid div {
+      border-color: var(--border-color-light);
+      background-color: var(--bg-secondary-light);
+    }
+
+    .calendar-grid .day-header {
+      text-align: center;
+      font-weight: 700;
+      background-color: transparent;
+      border: none;
+    }
+
+    .calendar-grid .day {
+      cursor: pointer;
+    }
+
+    .calendar-grid .day:hover {
+      background-color: rgba(151, 71, 255, 0.2);
+    }
+
+    .calendar-grid .day.today {
+      border: 2px solid var(--accent-start);
+    }
+
+    .calendar-grid .day.holiday {
+      background-color: rgba(255, 215, 0, 0.2);
+    }
+
+    .calendar-grid .day-number {
+      position: absolute;
+      top: 0.25rem;
+      left: 0.25rem;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      font-weight: 700;
+    }
+
+    .calendar-grid .notes {
+      margin-top: 1.5rem;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
+      max-height: calc(100% - 2rem);
+      overflow-y: auto;
+    }
+
+    .calendar-grid .note {
+      padding: 0.25rem;
+      border-radius: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .calendar-grid .note.pinned {
+      font-weight: 700;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    body.light .calendar-grid .note.pinned {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    #noteEditor, #searchPopup, #statsPopup, #settingsPopup, #timerPopup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      background-color: var(--bg-secondary-dark);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform var(--transition), opacity var(--transition);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    body.light #noteEditor, body.light #searchPopup, body.light #statsPopup, body.light #settingsPopup, body.light #timerPopup {
+      background-color: var(--bg-secondary-light);
+    }
+
+    #noteEditor.open, #searchPopup.open, #statsPopup.open, #settingsPopup.open, #timerPopup.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 900;
+    }
+
+    #overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #noteEditor h2, #searchPopup h2, #statsPopup h2, #settingsPopup h2, #timerPopup h2 {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      font-weight: 700;
+      color: var(--text-heading-dark);
+      margin-bottom: 1rem;
+      transition: color var(--transition);
+    }
+    body.light #noteEditor h2, body.light #searchPopup h2, body.light #statsPopup h2, body.light #settingsPopup h2, body.light #timerPopup h2 {
+      color: var(--text-heading-light);
+    }
+
+    #noteEditor label, #settingsPopup label {
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+
+    #noteEditor input, #noteEditor textarea, #noteEditor select, #settingsPopup input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      border-radius: 8px;
+      border: 1px solid var(--border-color-dark);
+      background-color: var(--bg-primary-dark);
+      color: var(--text-primary-dark);
+      transition: border-color var(--transition), background-color var(--transition), color var(--transition);
+    }
+    body.light #noteEditor input, body.light #noteEditor textarea, body.light #noteEditor select, body.light #settingsPopup input {
+      border-color: var(--border-color-light);
+      background-color: var(--bg-primary-light);
+      color: var(--text-primary-light);
+    }
+
+    #noteEditor textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    #noteEditor .editor-buttons, #timerPopup .timer-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+
+    #voiceInputBtn {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #searchBar {
+      margin: 0 auto;
+      width: 90%;
+      max-width: 600px;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color-dark);
+      background-color: var(--bg-secondary-dark);
+      transition: border-color var(--transition), background-color var(--transition);
+      margin-bottom: 1rem;
+    }
+    body.light #searchBar {
+      border-color: var(--border-color-light);
+      background-color: var(--bg-secondary-light);
+    }
+
+    #searchInput {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: var(--text-primary-dark);
+      font-size: calc(var(--font-size-base) * var(--font-scale));
+      outline: none;
+    }
+    body.light #searchInput {
+      color: var(--text-primary-light);
+    }
+
+    #searchInput::placeholder {
+      color: var(--text-primary-dark);
+      opacity: 0.7;
+    }
+    body.light #searchInput::placeholder {
+      color: var(--text-primary-light);
+    }
+
+    #searchResults {
+      margin-top: 1rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    .search-result {
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color-dark);
+      cursor: pointer;
+      transition: background-color var(--transition);
+    }
+    body.light .search-result {
+      border-bottom-color: var(--border-color-light);
+    }
+
+    .search-result:hover {
+      background-color: rgba(151, 71, 255, 0.2);
+    }
+
+    #floatingButton {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 9999px;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .time-used, .reminder-section {
+      margin-top: 0.75rem;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      color: var(--text-primary-dark);
+      transition: color var(--transition);
+    }
+    body.light .time-used, body.light .reminder-section {
+      color: var(--text-primary-light);
+    }
+
+    .timer-mode-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .timer-mode-buttons button {
+      padding: 0.5rem 1rem;
       font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
     }
-    #calendar {
-      grid-template-columns: repeat(7, minmax(60px, 1fr));
-    }
-    .day-cell {
-      min-height: 60px;
-      padding: 4px 6px;
-    }
-    #searchBar {
-      max-width: 100%;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
-      padding: 0.3rem 1.8rem 0.3rem 0.6rem;
-    }
-    #clearSearch {
-      right: 0.4rem;
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
-    }
-    #searchResults {
-      max-width: 100%;
-      max-height: 150px;
-    }
-    #notePopup, #settingsPopup, #statsPopup {
-      width: 95%;
-      padding: 0.5rem;
-    }
-  }
 
-  @media (max-width: 320px) {
-    header h1 {
-      font-size: calc(var(--font-size-base) * var(--font-scale));
+    .timer-mode-buttons button.active {
+      background-image: linear-gradient(to bottom, var(--accent-start), var(--accent-end));
     }
-    #calendar {
-      grid-template-columns: repeat(7, minmax(50px, 1fr));
+
+    .timer-display {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 2);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
     }
-    .day-cell {
-      min-height: 50px;
-      padding: 3px 5px;
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        padding: 0.5rem;
+      }
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.5);
+      }
+      .header-title-container {
+        width: 100%;
+        justify-content: center;
+      }
+      .header-buttons {
+        margin-top: 0.5rem;
+        justify-content: center;
+      }
+      #themeToggleBtn, #settingsBtn, #statsBtn, #timerBtn {
+        margin-left: 0;
+      }
+      .calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .calendar-header h2 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.3);
+      }
+      .calendar-controls {
+        width: 100%;
+        justify-content: center;
+      }
+      .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.25rem;
+      }
+      .calendar-grid div {
+        padding: 0.25rem;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      .calendar-grid .day-number {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      .calendar-grid .notes {
+        margin-top: 1rem;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
+      }
+      #noteEditor, #searchPopup, #statsPopup, #settingsPopup, #timerPopup {
+        width: 95%;
+        padding: 0.75rem;
+      }
     }
-    #searchBar {
-      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
-      padding: 0.2rem 1.5rem 0.2rem 0.5rem;
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      }
+      .calendar-header h2 {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.1);
+      }
+      .calendar-grid {
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.1rem;
+      }
+      .calendar-grid div {
+        padding: 0.2rem;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
+      }
+      .calendar-grid .day-number {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
+      }
+      .calendar-grid .notes {
+        margin-top: 0.8rem;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.6);
+      }
+      button {
+        padding: 0.25rem 1rem;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      #themeToggleBtn, #settingsBtn, #statsBtn, #timerBtn {
+        width: 28px;
+        height: 28px;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      }
+      #floatingButton {
+        width: 40px;
+        height: 40px;
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      }
     }
-  }
-</style>
+
+    @media (max-width: 320px) {
+      header h1 {
+        font-size: calc(var(--font-size-base) * var(--font-scale));
+      }
+      .calendar-header h2 {
+        font-size: calc(var(--font-size-base) * var(--font-scale));
+      }
+      .calendar-grid div {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
+      }
+      .calendar-grid .day-number {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
+      }
+    }
+  </style>
 </head>
 <body>
 <header>
   <div class="header-title-container">
-    <h1>Daily Calendar</h1>
-    <button id="statsBtn" aria-label="View Statistics">📊</button>
-    <button id="settingsBtn" aria-label="Settings">⚙️</button>
-    <button id="themeToggleBtn" aria-label="Toggle Theme">☀️</button>
+    <h1>1 Daily Calendar</h1>
+    <div class="header-buttons">
+      <button id="themeToggleBtn" aria-label="Toggle Theme">☀️</button>
+      <button id="settingsBtn" aria-label="Settings">⚙️</button>
+      <button id="statsBtn" aria-label="Statistics">📊</button>
+      <button id="timerBtn" aria-label="Timer">⏰</button>
+    </div>
   </div>
-  <div class="search-container">
-    <input id="searchBar" type="search" placeholder="Search notes or dates..." autocomplete="off" />
-    <button id="clearSearch" aria-label="Clear search">✖</button>
-  </div>
-  <div class="button-group">
-    <button id="prevMonthBtn" aria-label="Previous Month">◀</button>
-    <button id="nextMonthBtn" aria-label="Next Month">▶</button>
-    <button id="todayBtn" aria-label="Jump to Today">Today</button>
-    <button id="clearAllBtn" aria-label="Clear All Notes">Clear All</button>
-    <button id="guideBtn" onclick="window.location.href='index2.html'">Guide</button>
-    <button id="exportBtn">Export</button>
-    <button id="importBtn">Import</button>
-    <button id="viewToggleBtn" aria-label="Toggle Calendar View">📅</button>
-    <button id="bulkEditBtn" aria-label="Bulk Edit">📋</button>
-    <input type="file" id="importFile" accept=".json" style="display:none" />
+  <div>
+    <button onclick="window.location.href='index2.html'">User Guide</button>
   </div>
 </header>
-<div id="calendar" aria-label="Calendar"></div>
-<p id="noteCounter">Notes this month: 0</p>
-<div id="overlay"></div>
-<div id="notePopup" role="dialog" aria-modal="true" aria-labelledby="noteTitleLabel" aria-describedby="noteBodyLabel">
-  <label for="noteTitle" id="noteTitleLabel">Title</label>
-  <input type="text" id="noteTitle" maxlength="50" />
-  <button id="voiceInputBtn" aria-label="Voice Input">🎙️</button>
-  <label for="noteBody" id="noteBodyLabel">Details</label>
-  <textarea id="noteBody"></textarea>
-  <label for="noteColor">Color</label>
-  <input type="color" id="noteColor" value="#9747FF" />
-  <label for="noteCategory">Category</label>
-  <input type="text" id="noteCategory" placeholder="e.g., Work, Personal" />
-  <label for="notePriority">Priority</label>
-  <select id="notePriority">
-    <option value="low">Low</option>
-    <option value="medium">Medium</option>
-    <option value="high">High</option>
-  </select>
-  <label for="noteRecurring">Recurring</label>
-  <select id="noteRecurring">
-    <option value="none">None</option>
-    <option value="daily">Daily</option>
-    <option value="weekly">Weekly</option>
-    <option value="monthly">Monthly</option>
-  </select>
-  <label for="noteStartTime">Start Time</label>
-  <input type="time" id="noteStartTime" />
-  <label for="noteEndTime">End Time</label>
-  <input type="time" id="noteEndTime" />
-  <label for="noteAttachment">Attachment (URL or Text)</label>
-  <input type="text" id="noteAttachment" placeholder="e.g., https://example.com" />
-  <label for="noteTemplate">Template</label>
-  <select id="noteTemplate">
-    <option value="">None</option>
-  </select>
-  <div style="margin-top:1rem; text-align:right;">
-    <button id="pinNoteBtn">📌 Pin</button>
-    <button id="shareNoteBtn">🔗 Share</button>
-    <button id="undoBtn" disabled>↺ Undo</button>
-    <button id="redoBtn" disabled>↻ Redo</button>
-    <button id="saveNoteBtn">Save</button>
-    <button id="closeNoteBtn">Close</button>
+
+<div id="searchBar">
+  <input type="text" id="searchInput" placeholder="Search notes..." oninput="searchNotes()" />
+  <button onclick="openSearchPopup()" aria-label="Search">🔍</button>
+</div>
+
+<div class="calendar-header">
+  <h2 id="monthYear"></h2>
+  <div class="calendar-controls">
+    <button onclick="prevMonth()" aria-label="Previous Month">◀</button>
+    <button onclick="goToToday()" aria-label="Today">Today</button>
+    <button onclick="nextMonth()" aria-label="Next Month">▶</button>
+    <button onclick="toggleView()" aria-label="Toggle View">📅</button>
   </div>
 </div>
+
+<div class="calendar-grid" id="calendarGrid"></div>
+
+<button id="floatingButton" onclick="openNoteEditor(new Date())" aria-label="Add Note">+</button>
+
+<div id="overlay"></div>
+<div id="noteEditor" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+  <h2 id="editorTitle">Add/Edit Note</h2>
+  <label for="noteTitle">Title:</label>
+  <input type="text" id="noteTitle" maxlength="50" placeholder="Enter note title" />
+  <label for="noteBody">Details:</label>
+  <textarea id="noteBody" placeholder="Enter note details"></textarea>
+  <label for="noteColor">Color:</label>
+  <input type="color" id="noteColor" value="#9747FF" />
+  <label for="noteCategory">Category:</label>
+  <select id="noteCategory">
+    <option value="Work">Work</option>
+    <option value="Personal">Personal</option>
+    <option value="Other">Other</option>
+  </select>
+  <label for="notePriority">Priority:</label>
+  <select id="notePriority">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+  <label for="noteRecurrence">Recurrence:</label>
+  <select id="noteRecurrence">
+    <option value="None">None</option>
+    <option value="Daily">Daily</option>
+    <option value="Weekly">Weekly</option>
+    <option value="Monthly">Monthly</option>
+  </select>
+  <label for="noteStartTime">Start Time:</label>
+  <input type="time" id="noteStartTime" />
+  <label for="noteEndTime">End Time:</label>
+  <input type="time" id="noteEndTime" />
+  <label for="noteAttachment">Attachment (URL):</label>
+  <input type="url" id="noteAttachment" placeholder="Enter URL" />
+  <div class="time-used" id="timeUsed"></div>
+  <div class="reminder-section">
+    <label for="noteReminder">Reminder (minutes before):</label>
+    <input type="number" id="noteReminder" min="0" value="0" placeholder="Set to 0 to disable" />
+  </div>
+  <div class="editor-buttons">
+    <button onclick="saveNote()">Save</button>
+    <button onclick="pinNote()">📌 Pin</button>
+    <button onclick="undo()">↺ Undo</button>
+    <button onclick="redo()">↻ Redo</button>
+    <button id="voiceInputBtn" aria-label="Voice Input">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.47 6 6.93V22h2v-3.07c3.39-.46 6-3.4 6-6.93h-2z"/>
+      </svg>
+    </button>
+    <button onclick="shareNote()">🔗 Share</button>
+    <button onclick="closeNoteEditor()">Close</button>
+  </div>
+</div>
+
+<div id="searchPopup" role="dialog" aria-modal="true" aria-labelledby="searchTitle">
+  <h2 id="searchTitle">Search Results</h2>
+  <div id="searchResults"></div>
+  <button onclick="closeSearchPopup()">Close</button>
+</div>
+
+<div id="statsPopup" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
+  <h2 id="statsTitle">Statistics</h2>
+  <pre id="statsContent"></pre>
+  <button onclick="closeStatsPopup()">Close</button>
+</div>
+
 <div id="settingsPopup" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
   <h2 id="settingsTitle">Settings</h2>
-  <label for="fontSizeSlider">Font Size</label>
-  <input type="range" id="fontSizeSlider" min="0.8" max="1.2" step="0.1" value="1" />
-  <label for="themeSelect">Theme</label>
-  <select id="themeSelect">
+  <label for="fontSize">Font Size:</label>
+  <input type="range" id="fontSize" min="0.8" max="1.2" step="0.1" value="1" oninput="updateFontSize(this.value)" />
+  <label for="themeSelect">Theme:</label>
+  <select id="themeSelect" onchange="updateTheme(this.value)">
     <option value="default">Default</option>
     <option value="blue">Blue</option>
     <option value="green">Green</option>
   </select>
-  <label for="languageSelect">Language</label>
+  <label for="languageSelect">Language:</label>
   <select id="languageSelect">
     <option value="en">English</option>
     <option value="es">Spanish</option>
   </select>
-  <label><input type="checkbox" id="highContrastMode" /> High Contrast Mode</label>
-  <label for="customBackground">Custom Background</label>
-  <input type="text" id="customBackground" placeholder="URL or color (e.g., #123456)" />
-  <div style="margin-top:1rem; text-align:right;">
-    <button id="closeSettingsBtn">Close</button>
+  <label for="highContrast">High-Contrast Mode:</label>
+  <input type="checkbox" id="highContrast" onchange="toggleHighContrast(this.checked)" />
+  <label for="reminderInterval">Reminder Interval (minutes):</label>
+  <input type="number" id="reminderInterval" min="0" value="0" placeholder="Set to 0 to disable" />
+  <button onclick="saveSettings()">Save</button>
+  <button onclick="closeSettingsPopup()">Close</button>
+</div>
+
+<div id="timerPopup" role="dialog" aria-modal="true" aria-labelledby="timerTitle">
+  <h2 id="timerTitle">Pomodoro Timer</h2>
+  <div class="timer-mode-buttons">
+    <button class="active" onclick="setTimerMode('pomodoro')">Pomodoro</button>
+    <button onclick="setTimerMode('short')">Short Break</button>
+    <button onclick="setTimerMode('long')">Long Break</button>
+  </div>
+  <div class="timer-display" id="timerDisplay">25:00</div>
+  <div class="timer-controls">
+    <button id="timerStartBtn" onclick="startTimer()">Start</button>
+    <button id="timerPauseBtn" onclick="pauseTimer()" disabled>Pause</button>
+    <button id="timerResumeBtn" onclick="resumeTimer()" disabled>Resume</button>
+    <button id="timerStopBtn" onclick="stopTimer()" disabled>Stop</button>
+    <button onclick="closeTimerPopup()">Close</button>
   </div>
 </div>
-<div id="statsPopup" role="dialog" aria-modal="true" aria-labelledby="statsTitle">
-  <h2 id="statsTitle">Statistics</h2>
-  <p id="totalNotes">Total Notes: 0</p>
-  <p id="mostActiveDay">Most Active Day: None</p>
-  <div style="margin-top:1rem; text-align:right;">
-    <button id="closeStatsBtn">Close</button>
-  </div>
-</div>
-<div id="searchResults" role="listbox" aria-label="Search Results"></div>
-<button id="quickAddBtn" aria-label="Quick Add Note">+</button>
-<footer>
-  <div class="social-buttons">
-    <button onclick="window.open('https://twitter.com/mirmohmadluqman', '_blank')" aria-label="Twitter"><span>🐦</span></button>
-    <button onclick="window.location.href='mailto:mirmohmmadluqman@gmail.com'" aria-label="Email"><span>✉️</span></button>
-  </div>
-</footer>
+
 <script>
 (() => {
-  const calendarEl = document.getElementById('calendar');
-  const prevMonthBtn = document.getElementById('prevMonthBtn');
-  const nextMonthBtn = document.getElementById('nextMonthBtn');
-  const todayBtn = document.getElementById('todayBtn');
-  const clearAllBtn = document.getElementById('clearAllBtn');
-  const themeToggleBtn = document.getElementById('themeToggleBtn');
-  const exportBtn = document.getElementById('exportBtn');
-  const importBtn = document.getElementById('importBtn');
-  const importFile = document.getElementById('importFile');
-  const overlay = document.getElementById('overlay');
-  const notePopup = document.getElementById('notePopup');
-  const noteTitleInput = document.getElementById('noteTitle');
-  const noteBodyInput = document.getElementById('noteBody');
-  const noteColorInput = document.getElementById('noteColor');
-  const noteCategoryInput = document.getElementById('noteCategory');
-  const notePrioritySelect = document.getElementById('notePriority');
-  const noteRecurringSelect = document.getElementById('noteRecurring');
-  const noteStartTimeInput = document.getElementById('noteStartTime');
-  const noteEndTimeInput = document.getElementById('noteEndTime');
-  const noteAttachmentInput = document.getElementById('noteAttachment');
-  const noteTemplateSelect = document.getElementById('noteTemplate');
-  const saveNoteBtn = document.getElementById('saveNoteBtn');
-  const closeNoteBtn = document.getElementById('closeNoteBtn');
-  const pinNoteBtn = document.getElementById('pinNoteBtn');
-  const shareNoteBtn = document.getElementById('shareNoteBtn');
-  const undoBtn = document.getElementById('undoBtn');
-  const redoBtn = document.getElementById('redoBtn');
-  const voiceInputBtn = document.getElementById('voiceInputBtn');
-  const searchBar = document.getElementById('searchBar');
-  const clearSearch = document.getElementById('clearSearch');
-  const searchResults = document.getElementById('searchResults');
-  const noteCounter = document.getElementById('noteCounter');
-  const viewToggleBtn = document.getElementById('viewToggleBtn');
-  const bulkEditBtn = document.getElementById('bulkEditBtn');
-  const quickAddBtn = document.getElementById('quickAddBtn');
-  const settingsBtn = document.getElementById('settingsBtn');
-  const settingsPopup = document.getElementById('settingsPopup');
-  const closeSettingsBtn = document.getElementById('closeSettingsBtn');
-  const fontSizeSlider = document.getElementById('fontSizeSlider');
-  const themeSelect = document.getElementById('themeSelect');
-  const languageSelect = document.getElementById('languageSelect');
-  const highContrastMode = document.getElementById('highContrastMode');
-  const customBackground = document.getElementById('customBackground');
-  const statsBtn = document.getElementById('statsBtn');
-  const statsPopup = document.getElementById('statsPopup');
-  const closeStatsBtn = document.getElementById('closeStatsBtn');
-  const totalNotesEl = document.getElementById('totalNotes');
-  const mostActiveDayEl = document.getElementById('mostActiveDay');
-
-  let currentYear, currentMonth;
-  let notesData = {};
-  let noteHistory = [];
-  let noteHistoryIndex = -1;
-  let editingDate = null;
+  let currentDate = new Date(2025, 4, 24);
+  let currentView = 'month';
+  let notes = JSON.parse(localStorage.getItem('calendarNotes')) || {};
+  let focusData = JSON.parse(localStorage.getItem('focusData')) || {};
+  let undoStack = [];
+  let redoStack = [];
+  let currentNote = null;
+  let currentDateKey = '';
   let lightTheme = false;
-  let viewMode = 'monthly';
-  let selectedDays = [];
-  let templates = JSON.parse(localStorage.getItem('dailyCalendarTemplates')) || [];
-  let holidays = {
+  let timer;
+  let timerTime = 1500; // Default Pomodoro time in seconds
+  let timerMode = 'pomodoro';
+  let timerRunning = false;
+  let timerPaused = false;
+  let timerDurations = {
+    pomodoro: 25 * 60,
+    short: 5 * 60,
+    long: 15 * 60
+  };
+  let reminderInterval = 0;
+  let lastReminderTime = Date.now();
+
+  const holidays = {
     '2025-01-01': 'New Year',
     '2025-12-25': 'Christmas'
   };
-  const today = new Date();
-  const todayYear = today.getFullYear();
-  const todayMonth = today.getMonth();
-  const todayDate = today.getDate();
-  const todayStr = `${todayYear}-${String(todayMonth+1).padStart(2,'0')}-${String(todayDate).padStart(2,'0')}`;
-  const monthNames = {
-    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    es: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-  };
-  let currentLang = 'en';
 
   function init() {
-    currentYear = todayYear;
-    currentMonth = todayMonth;
     loadTheme();
     loadSettings();
-    loadData();
     renderCalendar();
-    updateNoteCounter();
-    populateTemplates();
     bindEvents();
     requestNotificationPermission();
-    scheduleNotifications();
-    fetchWeather();
   }
 
   function loadTheme() {
     lightTheme = localStorage.getItem('theme') === 'light';
-    setTheme(lightTheme);
-  }
-  function setTheme(light) {
-    lightTheme = light;
     document.body.classList.toggle('light', lightTheme);
-    themeToggleBtn.textContent = lightTheme ? '🌙' : '☀️';
-    localStorage.setItem('theme', lightTheme ? 'light' : 'dark');
+    document.getElementById('themeToggleBtn').textContent = lightTheme ? '🌙' : '☀️';
   }
-  themeToggleBtn.onclick = () => setTheme(!lightTheme);
 
   function loadSettings() {
-    const fontScale = localStorage.getItem('fontScale') || 1;
-    const customTheme = localStorage.getItem('customTheme') || 'default';
-    const lang = localStorage.getItem('language') || 'en';
-    const highContrast = localStorage.getItem('highContrast') === 'true';
-    const bg = localStorage.getItem('customBackground') || '';
-    document.documentElement.style.setProperty('--font-scale', fontScale);
-    fontSizeSlider.value = fontScale;
-    document.body.classList.toggle('theme-blue', customTheme === 'blue');
-    document.body.classList.toggle('theme-green', customTheme === 'green');
-    themeSelect.value = customTheme;
-    currentLang = lang;
-    languageSelect.value = lang;
-    document.body.classList.toggle('high-contrast', highContrast);
-    highContrastMode.checked = highContrast;
-    if (bg) {
-      document.body.style.background = bg.includes('url') ? `url(${bg})` : bg;
-      document.body.style.backgroundSize = 'cover';
+    const savedSettings = JSON.parse(localStorage.getItem('calendarSettings')) || {};
+    if (savedSettings.fontSize) {
+      document.documentElement.style.setProperty('--font-scale', savedSettings.fontSize);
+      document.getElementById('fontSize').value = savedSettings.fontSize;
     }
-    customBackground.value = bg;
+    if (savedSettings.theme) {
+      updateTheme(savedSettings.theme);
+      document.getElementById('themeSelect').value = savedSettings.theme;
+    }
+    if (savedSettings.highContrast) {
+      toggleHighContrast(savedSettings.highContrast);
+      document.getElementById('highContrast').checked = savedSettings.highContrast;
+    }
+    if (savedSettings.reminderInterval) {
+      reminderInterval = savedSettings.reminderInterval;
+      document.getElementById('reminderInterval').value = reminderInterval / 60;
+    }
+    if (savedSettings.timerDurations) {
+      timerDurations = savedSettings.timerDurations;
+      timerTime = timerDurations[timerMode];
+      updateTimerDisplay();
+    }
   }
 
-  function loadData() {
-    const data = localStorage.getItem('dailyCalendarNotes');
-    if (data) {
-      try {
-        notesData = JSON.parse(data);
-      } catch {
-        notesData = {};
-      }
-    }
-  }
-  function saveData() {
-    localStorage.setItem('dailyCalendarNotes', JSON.stringify(notesData));
+  function bindEvents() {
+    document.getElementById('themeToggleBtn').onclick = () => {
+      lightTheme = !lightTheme;
+      document.body.classList.toggle('light', lightTheme);
+      document.getElementById('themeToggleBtn').textContent = lightTheme ? '🌙' : '☀️';
+      localStorage.setItem('theme', lightTheme ? 'light' : 'dark');
+    };
+    document.getElementById('settingsBtn').onclick = openSettingsPopup;
+    document.getElementById('statsBtn').onclick = openStatsPopup;
+    document.getElementById('timerBtn').onclick = openTimerPopup;
+    document.getElementById('voiceInputBtn').onclick = startVoiceInput;
+    document.addEventListener('keydown', handleKeyboardShortcuts);
   }
 
   function renderCalendar() {
-    calendarEl.innerHTML = '';
-    calendarEl.className = viewMode;
-    const firstDay = new Date(currentYear, currentMonth, 1);
-    const lastDay = new Date(currentYear, currentMonth + 1, 0);
-    const firstWeekday = firstDay.getDay();
-    const daysInMonth = lastDay.getDate();
-    document.querySelector('header h1').textContent = `${monthNames[currentLang][currentMonth]} ${currentYear}`;
+    const calendarGrid = document.getElementById('calendarGrid');
+    calendarGrid.innerHTML = '';
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    days.forEach(day => {
+      const dayHeader = document.createElement('div');
+      dayHeader.className = 'day-header';
+      dayHeader.textContent = day;
+      calendarGrid.appendChild(dayHeader);
+    });
 
-    if (viewMode === 'monthly') {
-      for (let i = 0; i < firstWeekday; i++) {
-        const emptyCell = document.createElement('div');
-        emptyCell.className = 'day-cell';
-        calendarEl.appendChild(emptyCell);
-      }
-      for (let d = 1; d <= daysInMonth; d++) {
-        renderDayCell(d);
-      }
-    } else if (viewMode === 'weekly') {
-      const weekStart = todayDate - today.getDay();
-      for (let d = weekStart; d < weekStart + 7; d++) {
-        renderDayCell(d);
-      }
-    } else {
-      renderDayCell(todayDate);
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    document.getElementById('monthYear').textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${currentDate.getFullYear()}`;
+
+    for (let i = 0; i < firstDay; i++) {
+      const emptyDay = document.createElement('div');
+      calendarGrid.appendChild(emptyDay);
     }
-    updateNoteCounter();
-  }
 
-  function renderDayCell(d) {
-    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const cell = document.createElement('div');
-    cell.className = 'day-cell';
-    if (dateStr === todayStr) cell.classList.add('today');
-    if (holidays[dateStr]) cell.classList.add('holiday');
-    cell.tabIndex = 0;
-    cell.setAttribute('role', 'button');
-    cell.setAttribute('aria-label', `Date ${dateStr}`);
-    cell.dataset.date = dateStr;
-    cell.draggable = true;
-
-    const dayNum = document.createElement('div');
-    dayNum.className = 'day-number';
-    dayNum.textContent = d;
-    cell.appendChild(dayNum);
-
-    if (notesData[dateStr]) {
-      const notes = notesData[dateStr].notes || [notesData[dateStr]];
-      const pinnedNotes = notes.filter(n => n.pinned);
-      const otherNotes = notes.filter(n => !n.pinned);
-      [...pinnedNotes, ...otherNotes].forEach(note => {
-        const noteTitle = document.createElement('div');
-        noteTitle.className = 'note-title';
-        if (note.pinned) noteTitle.classList.add('pinned');
-        if (note.priority) noteTitle.classList.add(`priority-${note.priority}`);
-        noteTitle.textContent = note.title || '(No Title)';
-        noteTitle.style.backgroundColor = note.color || 'transparent';
-        cell.appendChild(noteTitle);
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+      const dateKey = date.toISOString().split('T')[0];
+      const dayDiv = document.createElement('div');
+      dayDiv.className = 'day';
+      if (dateKey === new Date().toISOString().split('T')[0]) {
+        dayDiv.classList.add('today');
+      }
+      if (holidays[dateKey]) {
+        dayDiv.classList.add('holiday');
+      }
+      dayDiv.innerHTML = `<span class="day-number">${day}</span>`;
+      const notesDiv = document.createElement('div');
+      notesDiv.className = 'notes';
+      const dayNotes = notes[dateKey] || [];
+      dayNotes.sort((a, b) => b.pinned - a.pinned);
+      dayNotes.forEach(note => {
+        const noteDiv = document.createElement('div');
+        noteDiv.className = 'note';
+        if (note.pinned) noteDiv.classList.add('pinned');
+        noteDiv.style.backgroundColor = note.color + '33';
+        noteDiv.textContent = note.title;
+        notesDiv.appendChild(noteDiv);
       });
+      dayDiv.appendChild(notesDiv);
+      dayDiv.onclick = () => openNoteEditor(date);
+      calendarGrid.appendChild(dayDiv);
     }
-
-    cell.onclick = (e) => {
-      if (e.ctrlKey) {
-        toggleDaySelection(dateStr, cell);
-      } else {
-        openNoteEditor(dateStr);
-      }
-    };
-    cell.onkeydown = e => {
-      if (e.key === 'Enter' || e.key === ' ') openNoteEditor(dateStr);
-    };
-    cell.ondragstart = (e) => {
-      e.dataTransfer.setData('text/plain', dateStr);
-      cell.classList.add('dragging');
-    };
-    cell.ondragover = (e) => {
-      e.preventDefault();
-      cell.classList.add('drop-target');
-    };
-    cell.ondragleave = () => {
-      cell.classList.remove('drop-target');
-    };
-    cell.ondrop = (e) => {
-      e.preventDefault();
-      const fromDate = e.dataTransfer.getData('text/plain');
-      const toDate = dateStr;
-      if (fromDate !== toDate && notesData[fromDate]) {
-        notesData[toDate] = notesData[toDate] || { notes: [] };
-        notesData[toDate].notes = notesData[toDate].notes || [];
-        notesData[toDate].notes.push(...notesData[fromDate].notes);
-        delete notesData[fromDate];
-        saveData();
-        renderCalendar();
-      }
-      cell.classList.remove('drop-target');
-    };
-    calendarEl.appendChild(cell);
   }
 
-  prevMonthBtn.onclick = () => {
-    currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
+  function prevMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar();
-    prevMonthBtn.classList.add('no-underline');
-  };
-  nextMonthBtn.onclick = () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
+  }
+
+  function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar();
-    nextMonthBtn.classList.add('no-underline');
-  };
-  prevMonthBtn.ontouchstart = prevMonthBtn.onclick;
-  nextMonthBtn.ontouchstart = nextMonthBtn.onclick;
+  }
 
-  todayBtn.onclick = () => {
-    currentYear = todayYear;
-    currentMonth = todayMonth;
+  function goToToday() {
+    currentDate = new Date(2025, 4, 24);
     renderCalendar();
-  };
+  }
 
-  clearAllBtn.onclick = () => {
-    if (confirm('Are you sure you want to clear all notes? This action cannot be undone.')) {
-      notesData = {};
-      saveData();
-      renderCalendar();
-    }
-  };
-
-  viewToggleBtn.onclick = () => {
-    viewMode = viewMode === 'monthly' ? 'weekly' : viewMode === 'weekly' ? 'daily' : 'monthly';
+  function toggleView() {
+    currentView = currentView === 'month' ? 'week' : 'month';
     renderCalendar();
-  };
+  }
 
-  bulkEditBtn.onclick = () => {
-    if (selectedDays.length > 0) {
-      openNoteEditor(selectedDays[0], true);
+  function openNoteEditor(date) {
+    currentDateKey = date.toISOString().split('T')[0];
+    document.getElementById('editorTitle').textContent = `Add/Edit Note - ${currentDateKey}`;
+    document.getElementById('noteTitle').value = '';
+    document.getElementById('noteBody').value = '';
+    document.getElementById('noteColor').value = '#9747FF';
+    document.getElementById('noteCategory').value = 'Work';
+    document.getElementById('notePriority').value = 'Low';
+    document.getElementById('noteRecurrence').value = 'None';
+    document.getElementById('noteStartTime').value = '';
+    document.getElementById('noteEndTime').value = '';
+    document.getElementById('noteAttachment').value = '';
+    document.getElementById('noteReminder').value = '0';
+    currentNote = null;
+    undoStack = [];
+    redoStack = [];
+    updateTimeUsed();
+    document.getElementById('noteEditor').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function updateTimeUsed() {
+    const mins = Math.floor((focusData[currentDateKey] || 0) / 60);
+    document.getElementById('timeUsed').textContent = `Focus Time on ${currentDateKey}: ${mins} min`;
+  }
+
+  function saveNote() {
+    const note = {
+      title: document.getElementById('noteTitle').value,
+      body: document.getElementById('noteBody').value,
+      color: document.getElementById('noteColor').value,
+      category: document.getElementById('noteCategory').value,
+      priority: document.getElementById('notePriority').value,
+      recurrence: document.getElementById('noteRecurrence').value,
+      startTime: document.getElementById('noteStartTime').value,
+      endTime: document.getElementById('noteEndTime').value,
+      attachment: document.getElementById('noteAttachment').value,
+      pinned: currentNote ? currentNote.pinned : false,
+      reminder: parseInt(document.getElementById('noteReminder').value) * 60
+    };
+    if (!notes[currentDateKey]) notes[currentDateKey] = [];
+    if (currentNote) {
+      const index = notes[currentDateKey].indexOf(currentNote);
+      notes[currentDateKey][index] = note;
     } else {
-      alert('Please select days to edit (Ctrl+Click on days).');
+      notes[currentDateKey].push(note);
     }
-  };
+    if (note.reminder > 0 && note.startTime) {
+      scheduleReminder(note, currentDateKey);
+    }
+    localStorage.setItem('calendarNotes', JSON.stringify(notes));
+    renderCalendar();
+    closeNoteEditor();
+  }
 
-  function toggleDaySelection(dateStr, cell) {
-    const index = selectedDays.indexOf(dateStr);
-    if (index === -1) {
-      selectedDays.push(dateStr);
-      cell.style.border = '2px solid var(--accent-start)';
-    } else {
-      selectedDays.splice(index, 1);
-      cell.style.border = dateStr === todayStr ? '2px solid var(--accent-start)' : '1px solid var(--theme-border)';
+  function scheduleReminder(note, dateKey) {
+    if (!note.startTime) return;
+    const [hours, minutes] = note.startTime.split(':').map(Number);
+    const reminderTime = new Date(dateKey);
+    reminderTime.setHours(hours, minutes, 0, 0);
+    reminderTime.setSeconds(reminderTime.getSeconds() - note.reminder);
+    const now = new Date();
+    const timeDiff = reminderTime - now;
+    if (timeDiff > 0 && Notification.permission === 'granted') {
+      setTimeout(() => {
+        new Notification('1 Daily Calendar Reminder', {
+          body: `Reminder: ${note.title} at ${note.startTime}`,
+          icon: 'https://via.placeholder.com/150'
+        });
+      }, timeDiff);
     }
   }
 
-  function updateNoteCounter() {
-    const monthPrefix = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}`;
-    const count = Object.keys(notesData).filter(date => date.startsWith(monthPrefix)).length;
-    noteCounter.textContent = `Notes this month: ${count}`;
+  function pinNote() {
+    if (currentNote) {
+      currentNote.pinned = !currentNote.pinned;
+      saveNote();
+    }
   }
 
-  function openNoteEditor(dateStr, isBulk = false) {
-    editingDate = dateStr;
-    const note = notesData[dateStr] || { notes: [{ title: '', body: '', color: '#9747FF', category: '', priority: 'low', recurring: 'none', startTime: '', endTime: '', attachment: '', pinned: false }] };
-    const firstNote = Array.isArray(note.notes) ? note.notes[0] : note;
-    noteTitleInput.value = firstNote.title || '';
-    noteBodyInput.value = firstNote.body || '';
-    noteColorInput.value = firstNote.color || '#9747FF';
-    noteCategoryInput.value = firstNote.category || '';
-    notePrioritySelect.value = firstNote.priority || 'low';
-    noteRecurringSelect.value = firstNote.recurring || 'none';
-    noteStartTimeInput.value = firstNote.startTime || '';
-    noteEndTimeInput.value = firstNote.endTime || '';
-    noteAttachmentInput.value = firstNote.attachment || '';
-    noteTemplateSelect.value = '';
-    noteHistory = [];
-    noteHistoryIndex = -1;
-    pinNoteBtn.textContent = firstNote.pinned ? '📍 Unpin' : '📌 Pin';
-    notePopup.classList.add('open');
-    overlay.classList.add('open');
-    noteTitleInput.focus();
+  function undo() {
+    // Placeholder for undo functionality
+  }
+
+  function redo() {
+    // Placeholder for redo functionality
+  }
+
+  function startVoiceInput() {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      document.getElementById('noteBody').value += transcript + ' ';
+    };
+    recognition.onerror = () => {
+      alert('Voice input failed. Please ensure your browser supports speech recognition and your microphone is enabled.');
+    };
+    recognition.start();
+  }
+
+  function shareNote() {
+    const note = {
+      title: document.getElementById('noteTitle').value,
+      body: document.getElementById('noteBody').value,
+      date: currentDateKey
+    };
+    const shareText = `${note.title}\n${note.body}\nDate: ${note.date}`;
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Note copied to clipboard!');
+    });
   }
 
   function closeNoteEditor() {
-    notePopup.classList.remove('open');
-    overlay.classList.remove('open');
-    editingDate = null;
-    selectedDays = [];
-    renderCalendar();
-  }
-  closeNoteBtn.onclick = closeNoteEditor;
-  overlay.onclick = closeNoteEditor;
-
-  function saveNoteHistory() {
-    const currentNote = {
-      title: noteTitleInput.value,
-      body: noteBodyInput.value,
-      color: noteColorInput.value,
-      category: noteCategoryInput.value,
-      priority: notePrioritySelect.value,
-      recurring: noteRecurringSelect.value,
-      startTime: noteStartTimeInput.value,
-      endTime: noteEndTimeInput.value,
-      attachment: noteAttachmentInput.value,
-      pinned: pinNoteBtn.textContent.includes('Unpin')
-    };
-    noteHistory = noteHistory.slice(0, noteHistoryIndex + 1);
-    noteHistory.push(currentNote);
-    noteHistoryIndex++;
-    undoBtn.disabled = noteHistoryIndex === 0;
-    redoBtn.disabled = noteHistoryIndex === noteHistory.length - 1;
+    document.getElementById('noteEditor').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
   }
 
-  undoBtn.onclick = () => {
-    if (noteHistoryIndex > 0) {
-      noteHistoryIndex--;
-      const note = noteHistory[noteHistoryIndex];
-      noteTitleInput.value = note.title;
-      noteBodyInput.value = note.body;
-      noteColorInput.value = note.color;
-      noteCategoryInput.value = note.category;
-      notePrioritySelect.value = note.priority;
-      noteRecurringSelect.value = note.recurring;
-      noteStartTimeInput.value = note.startTime;
-      noteEndTimeInput.value = note.endTime;
-      noteAttachmentInput.value = note.attachment;
-      pinNoteBtn.textContent = note.pinned ? '📍 Unpin' : '📌 Pin';
-      undoBtn.disabled = noteHistoryIndex === 0;
-      redoBtn.disabled = false;
-    }
-  };
-
-  redoBtn.onclick = () => {
-    if (noteHistoryIndex < noteHistory.length - 1) {
-      noteHistoryIndex++;
-      const note = noteHistory[noteHistoryIndex];
-      noteTitleInput.value = note.title;
-      noteBodyInput.value = note.body;
-      noteColorInput.value = note.color;
-      noteCategoryInput.value = note.category;
-      notePrioritySelect.value = note.priority;
-      noteRecurringSelect.value = note.recurring;
-      noteStartTimeInput.value = note.startTime;
-      noteEndTimeInput.value = note.endTime;
-      noteAttachmentInput.value = note.attachment;
-      pinNoteBtn.textContent = note.pinned ? '📍 Unpin' : '📌 Pin';
-      undoBtn.disabled = false;
-      redoBtn.disabled = noteHistoryIndex === noteHistory.length - 1;
-    }
-  };
-
-  noteTitleInput.oninput = noteBodyInput.oninput = saveNoteHistory;
-  noteColorInput.onchange = noteCategoryInput.oninput = notePrioritySelect.onchange = saveNoteHistory;
-  noteRecurringSelect.onchange = noteStartTimeInput.onchange = noteEndTimeInput.onchange = saveNoteHistory;
-  noteAttachmentInput.oninput = saveNoteHistory;
-
-  saveNoteBtn.onclick = () => {
-    if (!editingDate) return;
-    const title = noteTitleInput.value.trim();
-    const body = noteBodyInput.value.trim();
-    const color = noteColorInput.value;
-    const category = noteCategoryInput.value.trim();
-    const priority = notePrioritySelect.value;
-    const recurring = noteRecurringSelect.value;
-    const startTime = noteStartTimeInput.value;
-    const endTime = noteEndTimeInput.value;
-    const attachment = noteAttachmentInput.value.trim();
-    const pinned = pinNoteBtn.textContent.includes('Unpin');
-    const newNote = { title, body, color, category, priority, recurring, startTime, endTime, attachment, pinned, history: [] };
-
-    if (selectedDays.length > 0) {
-      selectedDays.forEach(date => {
-        notesData[date] = notesData[date] || { notes: [] };
-        notesData[date].notes = notesData[date].notes || [];
-        notesData[date].notes.push(newNote);
-      });
-    } else {
-      notesData[editingDate] = notesData[editingDate] || { notes: [] };
-      notesData[editingDate].notes = notesData[editingDate].notes || [];
-      notesData[editingDate].notes[0] = newNote;
-      if (title === '' && body === '') {
-        delete notesData[editingDate];
-      }
-      if (recurring !== 'none') {
-        applyRecurringNote(editingDate, newNote);
-      }
-    }
-    saveData();
-    scheduleNotifications();
-    renderCalendar();
-    closeNoteEditor();
-  };
-
-  pinNoteBtn.onclick = () => {
-    pinNoteBtn.textContent = pinNoteBtn.textContent.includes('Pin') ? '📍 Unpin' : '📌 Pin';
-    saveNoteHistory();
-  };
-
-  shareNoteBtn.onclick = () => {
-    const note = {
-      title: noteTitleInput.value,
-      body: noteBodyInput.value,
-      color: noteColorInput.value,
-      date: editingDate
-    };
-    const blob = new Blob([JSON.stringify(note)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    navigator.clipboard.writeText(url).then(() => {
-      alert('Shareable link copied to clipboard!');
-    });
-  };
-
-  voiceInputBtn.onclick = () => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = currentLang;
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      if (noteTitleInput === document.activeElement) {
-        noteTitleInput.value += transcript;
-      } else {
-        noteBodyInput.value += transcript;
-      }
-      saveNoteHistory();
-    };
-    recognition.start();
-  };
-
-  function applyRecurringNote(startDate, note) {
-    const [year, month, day] = startDate.split('-').map(Number);
-    let currentDate = new Date(year, month - 1, day);
-    const endDate = new Date(todayYear + 1, todayMonth, todayDate);
-    while (currentDate <= endDate) {
-      currentDate.setDate(currentDate.getDate() + (note.recurring === 'daily' ? 1 : note.recurring === 'weekly' ? 7 : 30));
-      const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
-      if (!notesData[dateStr]) {
-        notesData[dateStr] = { notes: [{ ...note, title: note.title + ' (Recurring)' }] };
-      }
-    }
-  }
-
-  exportBtn.onclick = () => {
-    const blob = new Blob([JSON.stringify(notesData, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `DailyCalendar-notes-${currentYear}-${currentMonth+1}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-
-    // Export to iCal
-    let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\n';
-    for (const [date, entry] of Object.entries(notesData)) {
-      const notes = entry.notes || [entry];
-      notes.forEach(note => {
-        if (note.startTime) {
-          const [year, month, day] = date.split('-');
-          const start = `${year}${month}${day}T${note.startTime.replace(':', '')}00`;
-          const end = note.endTime ? `${year}${month}${day}T${note.endTime.replace(':', '')}00` : start;
-          ics += `BEGIN:VEVENT\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${note.title || 'Event'}\nDESCRIPTION:${note.body || ''}\nEND:VEVENT\n`;
-        }
-      });
-    }
-    ics += 'END:VCALENDAR';
-    const icsBlob = new Blob([ics], { type: 'text/calendar' });
-    const icsUrl = URL.createObjectURL(icsBlob);
-    const icsLink = document.createElement('a');
-    icsLink.href = icsUrl;
-    icsLink.download = `DailyCalendar-events-${currentYear}-${currentMonth+1}.ics`;
-    icsLink.click();
-    URL.revokeObjectURL(icsUrl);
-  };
-
-  importBtn.onclick = () => {
-    importFile.value = null;
-    importFile.click();
-  };
-  importFile.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const importedData = JSON.parse(event.target.result);
-        if (typeof importedData !== 'object') throw new Error('Invalid format');
-        for (const [date, note] of Object.entries(importedData)) {
-          notesData[date] = note;
-        }
-        saveData();
-        renderCalendar();
-        alert('Import successful!');
-      } catch {
-        alert('Failed to import notes. Invalid file format.');
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  function debounce(fn, ms) {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => fn(...args), ms);
-    };
-  }
-
-  const performSearch = debounce((q) => {
-    searchResults.innerHTML = '';
-    if (!q) {
-      searchResults.style.display = 'none';
-      return;
-    }
-    const words = q.split(/\s+/).filter(w => w.length > 0);
+  function searchNotes() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
     const results = [];
-    for (const [date, entry] of Object.entries(notesData)) {
-      const notes = entry.notes || [entry];
-      notes.forEach(note => {
-        if (words.some(w =>
-          date.includes(w) ||
-          (note.title && note.title.toLowerCase().includes(w)) ||
-          (note.body && note.body.toLowerCase().includes(w)) ||
-          (note.category && note.category.toLowerCase().includes(w))
-        )) {
-          results.push({ date, note });
+    for (const dateKey in notes) {
+      notes[dateKey].forEach(note => {
+        if (
+          note.title.toLowerCase().includes(query) ||
+          note.body.toLowerCase().includes(query) ||
+          note.category.toLowerCase().includes(query) ||
+          dateKey.includes(query)
+        ) {
+          results.push({ date: dateKey, note });
         }
       });
     }
-    if (results.length === 0) {
-      const noResult = document.createElement('div');
-      noResult.textContent = 'No results found';
-      searchResults.appendChild(noResult);
-    } else {
-      for (const r of results) {
-        const div = document.createElement('div');
-        div.tabIndex = 0;
-        const highlightedTitle = r.note.title ? r.note.title.replace(new RegExp(`(${words.join('|')})`, 'gi'), '<mark>$1</mark>') : '(No Title)';
-        div.innerHTML = `${r.date}: ${highlightedTitle}`;
-        div.onclick = () => {
-          const [y, m, d] = r.date.split('-').map(Number);
-          currentYear = y;
-          currentMonth = m - 1;
-          renderCalendar();
-          openNoteEditor(r.date);
-          searchResults.style.display = 'none';
-          searchBar.value = '';
-        };
-        div.onkeypress = (e) => {
-          if (e.key === 'Enter' || e.key === ' ') div.click();
-        };
-        searchResults.appendChild(div);
+    displaySearchResults(results);
+  }
+
+  function displaySearchResults(results) {
+    const searchResults = document.getElementById('searchResults');
+    searchResults.innerHTML = '';
+    results.forEach(result => {
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'search-result';
+      resultDiv.textContent = `${result.date}: ${result.note.title}`;
+      resultDiv.onclick = () => {
+        currentDate = new Date(result.date);
+        renderCalendar();
+        openNoteEditor(new Date(result.date));
+        currentNote = result.note;
+        document.getElementById('noteTitle').value = result.note.title;
+        document.getElementById('noteBody').value = result.note.body;
+        document.getElementById('noteColor').value = result.note.color;
+        document.getElementById('noteCategory').value = result.note.category;
+        document.getElementById('notePriority').value = result.note.priority;
+        document.getElementById('noteRecurrence').value = result.note.recurrence;
+        document.getElementById('noteStartTime').value = result.note.startTime;
+        document.getElementById('noteEndTime').value = result.note.endTime;
+        document.getElementById('noteAttachment').value = result.note.attachment;
+        document.getElementById('noteReminder').value = result.note.reminder / 60;
+        closeSearchPopup();
+      };
+      searchResults.appendChild(resultDiv);
+    });
+  }
+
+  function openSearchPopup() {
+    document.getElementById('searchPopup').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeSearchPopup() {
+    document.getElementById('searchPopup').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function openStatsPopup() {
+    const totalNotes = Object.values(notes).flat().length;
+    let activeDays = 0;
+    for (const dateKey in notes) {
+      if (notes[dateKey].length > 0) activeDays++;
+    }
+    let dailyReport = '';
+    let weeklyReport = '';
+    let monthlyReport = '';
+    const now = new Date();
+    const todayKey = now.toISOString().split('T')[0];
+    dailyReport = `📌 Today (${todayKey}): ${Math.floor((focusData[todayKey] || 0) / 60)} min\n`;
+    for (const key in focusData) {
+      if (key.includes('-') && !key.startsWith('month-') && !key.startsWith('year-') && key !== todayKey) {
+        dailyReport += `📌 ${key}: ${Math.floor(focusData[key] / 60)} min\n`;
       }
     }
-    searchResults.style.display = 'block';
-  }, 300);
-
-  searchBar.oninput = () => {
-    const q = searchBar.value.trim().toLowerCase();
-    performSearch(q);
-  };
-
-  clearSearch.onclick = () => {
-    searchBar.value = '';
-    searchResults.style.display = 'none';
-    searchBar.focus();
-  };
-
-  document.addEventListener('click', (e) => {
-    if (!searchBar.contains(e.target) && !searchResults.contains(e.target) && !clearSearch.contains(e.target)) {
-      searchResults.style.display = 'none';
+    const weekData = {};
+    for (const key in focusData) {
+      if (key.includes('-') && !key.startsWith('month-') && !key.startsWith('year-')) {
+        const date = new Date(key);
+        const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+        const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+        const weekNumber = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        const weekKey = `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
+        weekData[weekKey] = (weekData[weekKey] || 0) + (focusData[key] || 0);
+      }
     }
-  });
-
-  quickAddBtn.onclick = () => {
-    openNoteEditor(todayStr);
-  };
-
-  settingsBtn.onclick = () => {
-    settingsPopup.classList.add('open');
-    overlay.classList.add('open');
-  };
-  closeSettingsBtn.onclick = () => {
-    settingsPopup.classList.remove('open');
-    overlay.classList.remove('open');
-  };
-
-  fontSizeSlider.oninput = () => {
-    const scale = fontSizeSlider.value;
-    document.documentElement.style.setProperty('--font-scale', scale);
-    localStorage.setItem('fontScale', scale);
-  };
-
-  themeSelect.onchange = () => {
-    const theme = themeSelect.value;
-    document.body.classList.remove('theme-blue', 'theme-green');
-    if (theme !== 'default') document.body.classList.add(`theme-${theme}`);
-    localStorage.setItem('customTheme', theme);
-  };
-
-  languageSelect.onchange = () => {
-    currentLang = languageSelect.value;
-    localStorage.setItem('language', currentLang);
-    renderCalendar();
-  };
-
-  highContrastMode.onchange = () => {
-    document.body.classList.toggle('high-contrast', highContrastMode.checked);
-    localStorage.setItem('highContrast', highContrastMode.checked);
-  };
-
-  customBackground.onchange = () => {
-    const bg = customBackground.value;
-    document.body.style.background = bg.includes('url') ? `url(${bg})` : bg;
-    document.body.style.backgroundSize = 'cover';
-    localStorage.setItem('customBackground', bg);
-  };
-
-  statsBtn.onclick = () => {
-    updateStatistics();
-    statsPopup.classList.add('open');
-    overlay.classList.add('open');
-  };
-  closeStatsBtn.onclick = () => {
-    statsPopup.classList.remove('open');
-    overlay.classList.remove('open');
-  };
-
-  function updateStatistics() {
-    const total = Object.keys(notesData).length;
-    const daysWithNotes = {};
-    for (const date of Object.keys(notesData)) {
-      daysWithNotes[date] = (daysWithNotes[date] || 0) + 1;
+    for (const week in weekData) {
+      weeklyReport += `📅 Week ${week}: ${Math.floor(weekData[week] / 60)} min\n`;
     }
-    const mostActive = Object.entries(daysWithNotes).sort((a, b) => b[1] - a[1])[0];
-    totalNotesEl.textContent = `Total Notes: ${total}`;
-    mostActiveDayEl.textContent = `Most Active Day: ${mostActive ? mostActive[0] : 'None'} (${mostActive ? mostActive[1] : 0} notes)`;
+    for (const key in focusData) {
+      if (key.startsWith('month-')) {
+        monthlyReport += `📆 ${key.split('-')[1]}: ${Math.floor(focusData[key] / 60)} min\n`;
+      }
+    }
+    const stats = `Total Notes: ${totalNotes}\nMost Active Days: ${activeDays}\n\n` +
+                  `Daily Focus Time:\n${dailyReport || 'No daily data.\n'}\n` +
+                  `Weekly Focus Time:\n${weeklyReport || 'No weekly data.\n'}\n` +
+                  `Monthly Focus Time:\n${monthlyReport || 'No monthly data.\n'}`;
+    document.getElementById('statsContent').textContent = stats;
+    document.getElementById('statsPopup').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeStatsPopup() {
+    document.getElementById('statsPopup').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function openSettingsPopup() {
+    document.getElementById('settingsPopup').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeSettingsPopup() {
+    document.getElementById('settingsPopup').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function updateFontSize(value) {
+    document.documentElement.style.setProperty('--font-scale', value);
+  }
+
+  function updateTheme(theme) {
+    // Placeholder for theme updates
+  }
+
+  function toggleHighContrast(enabled) {
+    // Placeholder for high-contrast mode
+  }
+
+  function saveSettings() {
+    const settings = {
+      fontSize: document.getElementById('fontSize').value,
+      theme: document.getElementById('themeSelect').value,
+      language: document.getElementById('languageSelect').value,
+      highContrast: document.getElementById('highContrast').checked,
+      reminderInterval: parseInt(document.getElementById('reminderInterval').value) * 60,
+      timerDurations
+    };
+    reminderInterval = settings.reminderInterval;
+    localStorage.setItem('calendarSettings', JSON.stringify(settings));
+    closeSettingsPopup();
+  }
+
+  function openTimerPopup() {
+    timerTime = timerDurations[timerMode];
+    updateTimerDisplay();
+    document.getElementById('timerPopup').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  }
+
+  function closeTimerPopup() {
+    stopTimer();
+    document.getElementById('timerPopup').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  function setTimerMode(newMode) {
+    document.querySelectorAll('.timer-mode-buttons button').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    timerMode = newMode;
+    timerTime = timerDurations[timerMode];
+    updateTimerDisplay();
+    stopTimer();
+  }
+
+  function updateTimerDisplay() {
+    const minutes = Math.floor(timerTime / 60).toString().padStart(2, '0');
+    const seconds = (timerTime % 60).toString().padStart(2, '0');
+    document.getElementById('timerDisplay').textContent = `${minutes}:${seconds}`;
+  }
+
+  function startTimer() {
+    if (timerRunning) return;
+    timerRunning = true;
+    timerPaused = false;
+    document.getElementById('timerStartBtn').disabled = true;
+    document.getElementById('timerPauseBtn').disabled = false;
+    document.getElementById('timerResumeBtn').disabled = true;
+    document.getElementById('timerStopBtn').disabled = false;
+    timer = setInterval(() => {
+      timerTime--;
+      updateTimerDisplay();
+      checkReminder();
+      if (timerTime <= 0) {
+        clearInterval(timer);
+        timerRunning = false;
+        recordFocusTime(timerDurations[timerMode]);
+        autoSwitchTimerMode();
+      }
+    }, 1000);
+  }
+
+  function pauseTimer() {
+    if (!timerRunning || timerPaused) return;
+    clearInterval(timer);
+    timerRunning = false;
+    timerPaused = true;
+    document.getElementById('timerStartBtn').disabled = true;
+    document.getElementById('timerPauseBtn').disabled = true;
+    document.getElementById('timerResumeBtn').disabled = false;
+    document.getElementById('timerStopBtn').disabled = false;
+    if (timerMode === 'pomodoro') {
+      const used = timerDurations.pomodoro - timerTime;
+      recordFocusTime(used);
+    }
+  }
+
+  function resumeTimer() {
+    if (timerRunning || !timerPaused) return;
+    startTimer();
+  }
+
+  function stopTimer() {
+    clearInterval(timer);
+    timerRunning = false;
+    timerPaused = false;
+    document.getElementById('timerStartBtn').disabled = false;
+    document.getElementById('timerPauseBtn').disabled = true;
+    document.getElementById('timerResumeBtn').disabled = true;
+    document.getElementById('timerStopBtn').disabled = true;
+    timerTime = timerDurations[timerMode];
+    updateTimerDisplay();
+  }
+
+  function autoSwitchTimerMode() {
+    if (timerMode === 'pomodoro') {
+      setTimerMode('short');
+      startTimer();
+    } else {
+      setTimerMode('pomodoro');
+      startTimer();
+    }
+  }
+
+  function recordFocusTime(seconds) {
+    if (timerMode !== 'pomodoro') return;
+    const todayKey = new Date().toISOString().split('T')[0];
+    const monthKey = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}`;
+    const yearKey = `${new Date().getFullYear()}`;
+    focusData[todayKey] = (focusData[todayKey] || 0) + seconds;
+    const storedMonth = localStorage.getItem('lastMonthKey');
+    if (storedMonth && storedMonth !== monthKey) {
+      let monthTotal = 0;
+      for (const key in focusData) {
+        if (key.startsWith(storedMonth)) {
+          monthTotal += focusData[key];
+          delete focusData[key];
+        }
+      }
+      focusData[`month-${storedMonth}`] = monthTotal;
+    }
+    localStorage.setItem('lastMonthKey', monthKey);
+    const storedYear = localStorage.getItem('lastYearKey');
+    if (storedYear && storedYear !== yearKey) {
+      let yearTotal = 0;
+      for (const key in focusData) {
+        if (key.startsWith(`month-${storedYear}`)) {
+          yearTotal += focusData[key];
+          delete focusData[key];
+        }
+      }
+      focusData[`year-${storedYear}`] = yearTotal;
+    }
+    localStorage.setItem('lastYearKey', yearKey);
+    localStorage.setItem('focusData', JSON.stringify(focusData));
+    updateTimeUsed();
   }
 
   function requestNotificationPermission() {
@@ -1415,75 +1288,24 @@
     }
   }
 
-  function scheduleNotifications() {
-    if (Notification.permission !== 'granted') return;
-    const now = new Date();
-    for (const [date, entry] of Object.entries(notesData)) {
-      const notes = entry.notes || [entry];
-      notes.forEach(note => {
-        if (note.startTime) {
-          const [year, month, day] = date.split('-').map(Number);
-          const [hour, minute] = note.startTime.split(':').map(Number);
-          const noteDate = new Date(year, month - 1, day, hour, minute);
-          if (noteDate > now) {
-            setTimeout(() => {
-              new Notification(note.title || 'Reminder', {
-                body: note.body || 'You have an event scheduled.',
-                icon: 'Elements/myLogo.png'
-              });
-            }, noteDate - now);
-          }
-        }
-      });
-    }
-  }
-
-  function fetchWeather() {
-    // Using a placeholder API (e.g., OpenWeatherMap)
-    // In a real app, you'd need an API key and proper fetch implementation
-    console.log('Weather API not implemented in this environment.');
-  }
-
-  function populateTemplates() {
-    templates.forEach(template => {
-      const option = document.createElement('option');
-      option.value = template.name;
-      option.textContent = template.name;
-      noteTemplateSelect.appendChild(option);
-    });
-  }
-
-  noteTemplateSelect.onchange = () => {
-    const template = templates.find(t => t.name === noteTemplateSelect.value);
-    if (template) {
-      noteTitleInput.value = template.title;
-      noteBodyInput.value = template.body;
-      saveNoteHistory();
-    }
-  };
-
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey) {
-      if (e.key === 't') {
-        e.preventDefault();
-        todayBtn.click();
-      } else if (e.key === 'e') {
-        e.preventDefault();
-        exportBtn.click();
-      } else if (e.key === 'i') {
-        e.preventDefault();
-        importBtn.click();
-      } else if (e.shiftKey && e.key.toUpperCase() === 'C') {
-        e.preventDefault();
-        clearAllBtn.click();
-      } else if (e.key === 'n') {
-        e.preventDefault();
-        quickAddBtn.click();
+  function checkReminder() {
+    if (reminderInterval === 0 || !timerRunning) return;
+    const now = Date.now();
+    if ((now - lastReminderTime) / 1000 >= reminderInterval) {
+      if (Notification.permission === 'granted') {
+        new Notification('1 Daily Calendar Reminder', {
+          body: 'Keep focused! Take a break if needed.',
+          icon: 'https://via.placeholder.com/150'
+        });
       }
+      lastReminderTime = now;
     }
-  });
+  }
 
-  function bindEvents() {}
+  function handleKeyboardShortcuts(e) {
+    if (e.ctrlKey && e.key === 't') goToToday();
+    if (e.ctrlKey && e.key === 'n') openNoteEditor(new Date());
+  }
 
   init();
 })();
