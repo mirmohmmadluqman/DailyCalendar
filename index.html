@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>1 Daily Calendar</title>
-  <link rel="icon" href="Elements/myLogo.png" />
+  <link rel="icon" href="Elements/myLogo.jpg" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -393,7 +393,7 @@
     }
 
     #searchBar {
-      margin: 0 auto;
+      margin: 2rem auto 0; /* Added margin-top for gap */
       width: 90%;
       max-width: 600px;
       padding: 0.5rem;
@@ -750,6 +750,8 @@
   </div>
 </div>
 
+<audio id="timerAlarm" src="Elements/alarm.mp3"></audio>
+
 <script>
 (() => {
   const calendarGrid = document.getElementById('calendarGrid');
@@ -802,6 +804,7 @@
   const timerResumeBtn = document.getElementById('timerResumeBtn');
   const timerStopBtn = document.getElementById('timerStopBtn');
   const closeTimerBtn = document.getElementById('closeTimerBtn');
+  const timerAlarm = document.getElementById('timerAlarm');
   const themeToggleBtn = document.getElementById('themeToggleBtn');
   const settingsBtn = document.getElementById('settingsBtn');
   const statsBtn = document.getElementById('statsBtn');
@@ -1137,7 +1140,7 @@
       setTimeout(() => {
         new Notification('1 Daily Calendar Reminder', {
           body: `Reminder: ${note.title}`,
-          icon: 'Elements/myLogo.png'
+          icon: 'Elements/myLogo.jpg'
         });
       }, timeDiff);
     }
@@ -1473,6 +1476,7 @@
       if (timerTime <= 0) {
         clearInterval(timer);
         timerRunning = false;
+        timerAlarm.play().catch(err => console.error('Failed to play alarm:', err));
         recordFocusTime(timerDurations[timerMode]);
         autoSwitchTimerMode();
       }
@@ -1568,7 +1572,7 @@
       if (Notification.permission === 'granted') {
         new Notification('1 Daily Calendar Reminder', {
           body: 'Keep focused! Take a break if needed.',
-          icon: 'Elements/myLogo.png'
+          icon: 'Elements/myLogo.jpg'
         });
       }
       lastReminderTime = now;
