@@ -465,6 +465,7 @@
       align-items: center;
       justify-content: center;
       box-shadow: var(--shadow);
+      background-image: linear-gradient(to bottom, var(--accent-start), var(--accent-end));
     }
 
     .time-used, .reminder-section {
@@ -532,6 +533,55 @@
       color: var(--text-primary-light);
     }
 
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color-dark);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      width: 90%;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    body.light footer {
+      border-color: var(--border-color-light);
+    }
+    .social-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+    .social-buttons button {
+      width: 36px;
+      height: 36px;
+      border-radius: 9999px;
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+    .social-buttons button::after {
+      height: 0;
+    }
+    .contact-info {
+      font-size: calc(var(--font-size-base) * var(--font-scale) * 0.9);
+      margin-top: 1rem;
+    }
+    .contact-info a {
+      color: var(--accent-start);
+      text-decoration: none;
+    }
+    .contact-info a:hover {
+      text-decoration: underline;
+    }
+    body.light .contact-info a {
+      color: var(--accent-end);
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
       header {
@@ -582,6 +632,9 @@
         width: 95%;
         padding: 1rem;
       }
+      footer {
+        padding: 1rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -620,6 +673,11 @@
         height: 40px;
         font-size: calc(var(--font-size-base) * var(--font-scale) * 1.2);
       }
+      .social-buttons button {
+        width: 32px;
+        height: 32px;
+        font-size: calc(var(--font-size-base) * var(--font-scale));
+      }
     }
 
     @media (max-width: 320px) {
@@ -634,6 +692,9 @@
       }
       .calendar-grid .day-number {
         font-size: calc(var(--font-size-base) * var(--font-scale) * 0.7);
+      }
+      .contact-info {
+        font-size: calc(var(--font-size-base) * var(--font-scale) * 0.8);
       }
     }
   </style>
@@ -742,12 +803,10 @@
     <input type="range" id="fontSize" min="0.8" max="1.2" step="0.1" value="1" />
   </div>
   <div class="settings-section">
-    <label for="themeSelect">Theme:</label>
-    <select id="themeSelect">
-      <option value="default">Default</option>
-      <option value="blue">Blue</option>
-      <option value="green">Green</option>
-    </select>
+    <label for="themeColorStart">Theme Color Start:</label>
+    <input type="color" id="themeColorStart" value="#9747FF" />
+    <label for="themeColorEnd">Theme Color End:</label>
+    <input type="color" id="themeColorEnd" value="#FF47A8" />
     <label for="languageSelect">Language:</label>
     <select id="languageSelect">
       <option value="en">English</option>
@@ -797,6 +856,18 @@
 
 <audio id="timerAlarm" src="Elements/alarm.mp3"></audio>
 
+<footer>
+  <p>Need help? Contact us!</p>
+  <div class="social-buttons">
+    <button onclick="window.open('https://twitter.com/mirmohmadluqman', '_blank')" aria-label="Twitter"><span>🐦</span></button>
+    <button onclick="window.location.href='mailto:mirmohmmadluqman@gmail.com'" aria-label="Email"><span>✉️</span></button>
+  </div>
+  <div class="contact-info">
+    <p>Twitter ID: <a href="https://twitter.com/mirmohmadluqman" target="_blank">@mirmohmadluqman</a></p>
+    <p>Gmail: <a href="mailto:mirmohmmadluqman@gmail.com">mirmohmmadluqman@gmail.com</a></p>
+  </div>
+</footer>
+
 <script>
 (() => {
   const calendarGrid = document.getElementById('calendarGrid');
@@ -828,7 +899,8 @@
   const closeStatsBtn = document.getElementById('closeStatsBtn');
   const settingsPopup = document.getElementById('settingsPopup');
   const fontSizeInput = document.getElementById('fontSize');
-  const themeSelect = document.getElementById('themeSelect');
+  const themeColorStartInput = document.getElementById('themeColorStart');
+  const themeColorEndInput = document.getElementById('themeColorEnd');
   const languageSelect = document.getElementById('languageSelect');
   const highContrastCheckbox = document.getElementById('highContrast');
   const reminderIntervalInput = document.getElementById('reminderInterval');
@@ -897,6 +969,15 @@
     lightTheme = localStorage.getItem('theme') === 'light';
     document.body.classList.toggle('light', lightTheme);
     themeToggleBtn.textContent = lightTheme ? '🌙' : '☀️';
+
+    // Load theme colors from localStorage
+    const savedThemeColors = JSON.parse(localStorage.getItem('themeColors')) || {};
+    const accentStart = savedThemeColors.accentStart || '#9747FF';
+    const accentEnd = savedThemeColors.accentEnd || '#FF47A8';
+    document.documentElement.style.setProperty('--accent-start', accentStart);
+    document.documentElement.style.setProperty('--accent-end', accentEnd);
+    themeColorStartInput.value = accentStart;
+    themeColorEndInput.value = accentEnd;
   }
 
   function loadSettings() {
@@ -904,10 +985,6 @@
     if (savedSettings.fontSize) {
       document.documentElement.style.setProperty('--font-scale', savedSettings.fontSize);
       fontSizeInput.value = savedSettings.fontSize;
-    }
-    if (savedSettings.theme) {
-      updateTheme(savedSettings.theme);
-      themeSelect.value = savedSettings.theme;
     }
     if (savedSettings.highContrast) {
       toggleHighContrast(savedSettings.highContrast);
@@ -930,7 +1007,6 @@
   function saveSettings() {
     const settings = {
       fontSize: fontSizeInput.value,
-      theme: themeSelect.value,
       language: languageSelect.value,
       highContrast: highContrastCheckbox.checked,
       reminderInterval: parseInt(reminderIntervalInput.value) * 60,
@@ -940,6 +1016,15 @@
         long: parseInt(longBreakDurationInput.value) * 60
       }
     };
+    // Save theme colors separately
+    const themeColors = {
+      accentStart: themeColorStartInput.value,
+      accentEnd: themeColorEndInput.value
+    };
+    localStorage.setItem('themeColors', JSON.stringify(themeColors));
+    document.documentElement.style.setProperty('--accent-start', themeColors.accentStart);
+    document.documentElement.style.setProperty('--accent-end', themeColors.accentEnd);
+
     reminderInterval = settings.reminderInterval;
     timerDurations = settings.timerDurations;
     timerTime = timerDurations[timerMode];
@@ -991,7 +1076,6 @@
     fontSizeInput.oninput = () => {
       document.documentElement.style.setProperty('--font-scale', fontSizeInput.value);
     };
-    themeSelect.onchange = () => updateTheme(themeSelect.value);
     highContrastCheckbox.onchange = () => toggleHighContrast(highContrastCheckbox.checked);
     document.addEventListener('keydown', handleKeyboardShortcuts);
   }
@@ -1422,13 +1506,6 @@
   function closeSettingsPopup() {
     settingsPopup.classList.remove('open');
     overlay.classList.remove('open');
-  }
-
-  function updateTheme(theme) {
-    document.body.classList.remove('theme-blue', 'theme-green');
-    if (theme !== 'default') {
-      document.body.classList.add(`theme-${theme}`);
-    }
   }
 
   function toggleHighContrast(enabled) {
