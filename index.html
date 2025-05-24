@@ -393,7 +393,7 @@
     }
 
     #searchBar {
-      margin: 2rem auto 0; /* Added margin-top for gap */
+      margin: 2rem auto 0;
       width: 90%;
       max-width: 600px;
       padding: 0.5rem;
@@ -1410,20 +1410,43 @@
     reader.onload = (e) => {
       try {
         const data = JSON.parse(e.target.result);
-        if (data.notes) {
-          notes = data.notes;
+        // Check if the data is in the legacy format (simple key-value pairs of dates and notes)
+        if (!data.notes && !data.focusData && !data.settings) {
+          const convertedNotes = {};
+          for (const [dateKey, note] of Object.entries(data)) {
+            convertedNotes[dateKey] = [{
+              title: note.title || '',
+              body: note.body || '',
+              color: '#9747FF', // Default values for new fields
+              category: 'Work',
+              priority: 'Low',
+              recurrence: 'None',
+              attachment: '',
+              reminder: 0,
+              pinned: false
+            }];
+          }
+          notes = convertedNotes;
           localStorage.setItem('calendarNotes', JSON.stringify(notes));
+          renderCalendar();
+          alert('Legacy data imported successfully!');
+        } else {
+          // Handle the current format
+          if (data.notes) {
+            notes = data.notes;
+            localStorage.setItem('calendarNotes', JSON.stringify(notes));
+          }
+          if (data.focusData) {
+            focusData = data.focusData;
+            localStorage.setItem('focusData', JSON.stringify(focusData));
+          }
+          if (data.settings) {
+            localStorage.setItem('calendarSettings', JSON.stringify(data.settings));
+            loadSettings();
+          }
+          renderCalendar();
+          alert('Data imported successfully!');
         }
-        if (data.focusData) {
-          focusData = data.focusData;
-          localStorage.setItem('focusData', JSON.stringify(focusData));
-        }
-        if (data.settings) {
-          localStorage.setItem('calendarSettings', JSON.stringify(data.settings));
-          loadSettings();
-        }
-        renderCalendar();
-        alert('Data imported successfully!');
       } catch (err) {
         alert('Failed to import data. Please ensure the file is a valid JSON.');
       }
